@@ -48,24 +48,24 @@ export function CustomerModal({ isOpen, onClose, customer }: CustomerModalProps)
   const handleSubmit = async () => {
     // Validate required fields
     if (!formData.name.trim()) {
-      swalConfig.warning('Please enter customer name');
+      swalConfig.warning('Por favor ingresa el nombre del cliente');
       return;
     }
 
     if (!formData.email.trim()) {
-      swalConfig.warning('Please enter email address');
+      swalConfig.warning('Por favor ingresa el correo electrónico');
       return;
     }
 
     if (!formData.phone.trim()) {
-      swalConfig.warning('Please enter phone number');
+      swalConfig.warning('Por favor ingresa el número de teléfono');
       return;
     }
 
     // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
-      swalConfig.warning('Please enter a valid email address');
+      swalConfig.warning('Por favor ingresa un correo electrónico válido');
       return;
     }
 
@@ -84,23 +84,23 @@ export function CustomerModal({ isOpen, onClose, customer }: CustomerModalProps)
     };
 
     try {
-      swalConfig.loading(`${customer ? 'Updating' : 'Creating'} customer...`);
+      swalConfig.loading(`${customer ? 'Actualizando' : 'Creando'} cliente...`);
       const { customersService } = await import('../../lib/services');
       
       if (customer) {
         await customersService.update(customerData.id, customerData);
         dispatch({ type: 'UPDATE_CUSTOMER', payload: customerData });
-        swalConfig.success('Customer updated successfully!');
+        swalConfig.success('¡Cliente actualizado correctamente!');
       } else {
         const newCustomer = await customersService.create(customerData);
         dispatch({ type: 'ADD_CUSTOMER', payload: newCustomer });
-        swalConfig.success('Customer created successfully!');
+        swalConfig.success('¡Cliente registrado correctamente!');
       }
       
       onClose();
     } catch (error) {
       console.error('Error saving customer:', error);
-      swalConfig.error('Failed to save customer. Please try again.');
+      swalConfig.error('Error al guardar el cliente. Intente nuevamente.');
     }
   };
 
@@ -117,7 +117,7 @@ export function CustomerModal({ isOpen, onClose, customer }: CustomerModalProps)
       <div className="modal max-w-md">
         <div className="modal-header">
           <h2 className="text-xl font-bold text-gray-900">
-            {customer ? 'Edit Customer' : 'Add New Customer'}
+            {customer ? 'Editar Cliente' : 'Agregar Nuevo Cliente'}
           </h2>
           <button
             onClick={onClose}
@@ -130,7 +130,7 @@ export function CustomerModal({ isOpen, onClose, customer }: CustomerModalProps)
         <div className="modal-body space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Full Name *
+              Nombre Completo *
             </label>
             <input
               type="text"
@@ -139,13 +139,13 @@ export function CustomerModal({ isOpen, onClose, customer }: CustomerModalProps)
               onChange={handleChange}
               required
               className="input"
-              placeholder="Enter full name"
+              placeholder="Ingresa el nombre completo"
             />
           </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Email Address *
+              Correo Electrónico *
             </label>
             <input
               type="email"
@@ -154,13 +154,13 @@ export function CustomerModal({ isOpen, onClose, customer }: CustomerModalProps)
               onChange={handleChange}
               required
               className="input"
-              placeholder="Enter email address"
+              placeholder="correo@ejemplo.com"
             />
           </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Phone Number *
+              Número de Teléfono *
             </label>
             <input
               type="tel"
@@ -169,13 +169,13 @@ export function CustomerModal({ isOpen, onClose, customer }: CustomerModalProps)
               onChange={handleChange}
               required
               className="input"
-              placeholder="Enter phone number"
+              placeholder="Ej. +51 987654321"
             />
           </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Address
+              Dirección
             </label>
             <textarea
               name="address"
@@ -183,13 +183,13 @@ export function CustomerModal({ isOpen, onClose, customer }: CustomerModalProps)
               onChange={handleChange}
               rows={3}
               className="textarea"
-              placeholder="Enter address"
+              placeholder="Dirección del cliente"
             />
           </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Credit Limit
+              Límite de Crédito
             </label>
             <input
               type="number"
@@ -205,7 +205,7 @@ export function CustomerModal({ isOpen, onClose, customer }: CustomerModalProps)
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Price Tier
+              Nivel de Precio
             </label>
             <select
               name="priceTier"
@@ -213,10 +213,10 @@ export function CustomerModal({ isOpen, onClose, customer }: CustomerModalProps)
               onChange={handleChange}
               className="select"
             >
-              <option value="Standard">Standard</option>
+              <option value="Standard">Estándar</option>
               <option value="Premium">Premium</option>
               <option value="VIP">VIP</option>
-              <option value="Wholesale">Wholesale</option>
+              <option value="Wholesale">Mayorista</option>
             </select>
           </div>
         </div>
@@ -227,14 +227,14 @@ export function CustomerModal({ isOpen, onClose, customer }: CustomerModalProps)
             onClick={onClose}
             className="btn btn-secondary btn-md"
           >
-            Cancel
+            Cancelar
           </button>
           <button
             type="button"
             onClick={handleSubmit}
             className="btn btn-primary btn-md"
           >
-            {customer ? 'Update Customer' : 'Add Customer'}
+            {customer ? 'Actualizar Cliente' : 'Guardar Cliente'}
           </button>
         </div>
       </div>

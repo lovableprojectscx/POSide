@@ -34,28 +34,24 @@ export function CheckoutModal({ isOpen, onClose, onComplete }: CheckoutModalProp
     holderName: '',
   });
 
-  // Sri Lankan banks list
-  const sriLankanBanks = [
-    'Bank of Ceylon',
-    'People\'s Bank',
-    'Commercial Bank of Ceylon PLC',
-    'Hatton National Bank PLC',
-    'Sampath Bank PLC',
-    'Nations Trust Bank PLC',
-    'DFCC Bank PLC',
-    'Pan Asia Banking Corporation PLC',
-    'Seylan Bank PLC',
-    'Union Bank of Colombo PLC',
-    'National Development Bank PLC',
-    'Regional Development Bank',
-    'Sanasa Development Bank PLC',
-    'HDFC Bank',
-    'Standard Chartered Bank',
-    'Citibank N.A.',
-    'MCB Bank Limited',
-    'Habib Bank Limited',
-    'Deutsche Bank AG',
-    'ICBC'
+  // Banks list
+  const availableBanks = [
+    'BCP (Banco de Crédito)',
+    'BBVA',
+    'Interbank',
+    'Scotiabank',
+    'Banco de la Nación',
+    'Banco Falabella',
+    'Banco Ripley',
+    'BanBif',
+    'Pichincha',
+    'Caja Arequipa',
+    'Caja Huancayo',
+    'Caja Piura',
+    'Caja Cusco',
+    'Santander',
+    'Citibank',
+    'Otro Banco / Entidad'
   ];
 
   // Function to detect card type from card number
@@ -81,7 +77,6 @@ export function CheckoutModal({ isOpen, onClose, onComplete }: CheckoutModalProp
     const cardType = detectCardType(cleanValue);
     
     if (cardType === 'amex') {
-      // Amex format: 4-6-5
       return cleanValue.replace(/(\d{4})(\d{0,6})(\d{0,5})/, (_, p1, p2, p3) => {
         let formatted = p1;
         if (p2) formatted += ' ' + p2;
@@ -89,63 +84,36 @@ export function CheckoutModal({ isOpen, onClose, onComplete }: CheckoutModalProp
         return formatted;
       });
     } else {
-      // Visa, Mastercard, Discover format: 4-4-4-4
       return cleanValue.replace(/(\d{4})(?=\d)/g, '$1 ').trim();
     }
   };
 
-  // Function to get expected card number length
-  const getCardNumberLength = (cardType: string) => {
-    return cardType === 'amex' ? 15 : 16;
-  };
-
-  // Function to handle card number input
   const handleCardNumberChange = (value: string) => {
-    const cleanValue = value.replace(/\s/g, '');
+    const cleanValue = value.replace(/\D/g, ''); // Only digits
     const cardType = detectCardType(cleanValue);
-    const maxLength = getCardNumberLength(cardType);
+    const maxLength = cardType === 'amex' ? 15 : 16;
     
     if (cleanValue.length <= maxLength) {
-      const formattedValue = formatCardNumber(cleanValue);
+      const formatted = formatCardNumber(cleanValue);
       const lastFour = cleanValue.slice(-4);
       
       setCardDetails(prev => ({
         ...prev,
-        cardNumber: formattedValue,
+        cardNumber: formatted,
         cardType,
         lastFourDigits: lastFour
       }));
     }
   };
 
-  // Calculate totals
   const subtotal = state.cart.reduce((sum, item) => {
     const price = item.product.isWeightBased 
       ? (item.product.pricePerUnit || 0) * (item.weight || 1)
       : item.product.price;
     return sum + (price * item.quantity);
   }, 0);
+  
   const manualDiscount = state.cart.reduce((sum, item) => sum + (item.discount || 0), 0);
-
-  // Reset form when modal opens
-  useEffect(() => {
-    if (isOpen) {
-      setAmountPaid('');
-      setIsProcessing(false);
-      setShowReceipt(false);
-      setCompletedSale(null);
-      setCreditNotes('');
-      setShowDiscountAlert(false);
-      setPaymentMethod('cash');
-      setCardDetails({
-        bankName: '',
-        cardType: 'unknown',
-        cardNumber: '',
-        lastFourDigits: '',
-        holderName: '',
-      });
-    }
-  }, [isOpen]);
 
   // Check for applicable automatic discounts
   useEffect(() => {
@@ -153,7 +121,6 @@ export function CheckoutModal({ isOpen, onClose, onComplete }: CheckoutModalProp
 
     const eligibleDiscounts: AppliedDiscount[] = [];
     const gifts: CartItem[] = [];
-    let autoDiscountAmount = 0;
 
     state.discounts.forEach(discount => {
       if (checkDiscountEligibility(
@@ -165,7 +132,6 @@ export function CheckoutModal({ isOpen, onClose, onComplete }: CheckoutModalProp
         paymentMethod === 'card' ? cardDetails : undefined
       )) {
         if (discount.type === 'free_gift' && discount.freeGiftProducts) {
-          // Add free gifts
           discount.freeGiftProducts.forEach(productId => {
             const product = state.products.find(p => p.id === productId);
             if (product) {
@@ -186,7 +152,6 @@ export function CheckoutModal({ isOpen, onClose, onComplete }: CheckoutModalProp
             type: 'free_gift',
           });
         } else {
-          // Calculate discount amount
           let discountAmount = 0;
           if (discount.type === 'percentage') {
             discountAmount = (subtotal * discount.value) / 100;
@@ -198,7 +163,6 @@ export function CheckoutModal({ isOpen, onClose, onComplete }: CheckoutModalProp
           }
 
           if (discountAmount > 0) {
-            autoDiscountAmount += discountAmount;
             eligibleDiscounts.push({
               discountId: discount.id,
               discountName: discount.name,
@@ -213,7 +177,6 @@ export function CheckoutModal({ isOpen, onClose, onComplete }: CheckoutModalProp
     setAppliedDiscounts(eligibleDiscounts);
     setFreeGifts(gifts);
     
-    // Show alert if there are discounts or free gifts
     if (eligibleDiscounts.length > 0) {
       setShowDiscountAlert(true);
     }
@@ -225,11 +188,9 @@ export function CheckoutModal({ isOpen, onClose, onComplete }: CheckoutModalProp
   const total = subtotal - totalDiscount + taxAmount;
   const change = parseFloat(amountPaid) - total;
 
-  // Check if customer has enough credit limit for credit payment
   const canPayWithCredit = state.selectedCustomer && 
     (state.selectedCustomer.creditLimit - state.selectedCustomer.creditUsed) >= total;
 
-  // Check if payment can be processed
   const canProcessPayment = () => {
     if (isProcessing) return false;
     
@@ -252,15 +213,13 @@ export function CheckoutModal({ isOpen, onClose, onComplete }: CheckoutModalProp
     }
   };
 
-  // Don't render anything if modal is not open and no receipt to show
   if (!isOpen && !showReceipt) return null;
 
   const handlePayment = async () => {
     setIsProcessing(true);
     
     try {
-      // Simulate payment processing
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await new Promise(resolve => setTimeout(resolve, 800));
 
       const invoiceNumber = await generateInvoice();
       
@@ -280,7 +239,7 @@ export function CheckoutModal({ isOpen, onClose, onComplete }: CheckoutModalProp
           id: Date.now().toString()
         } : undefined,
         status: paymentMethod === 'credit' ? 'credit' : 'completed',
-        cashier: user?.user_metadata?.full_name || user?.email || 'Unknown',
+        cashier: user?.user_metadata?.name || user?.user_metadata?.username || user?.email || 'Cajero',
         timestamp: new Date(),
         receiptNumber: invoiceNumber,
         notes: paymentMethod === 'credit' ? creditNotes : undefined,
@@ -288,31 +247,28 @@ export function CheckoutModal({ isOpen, onClose, onComplete }: CheckoutModalProp
         freeGifts: freeGifts.length > 0 ? freeGifts : undefined,
       };
 
-      // Save sale to Supabase and update local state
       const savedSale = await salesService.create(sale);
       dispatch({ type: 'ADD_SALE', payload: savedSale });
 
-      // Update inventory in Supabase and local state
+      // Update inventory
       for (const item of state.cart) {
         try {
           const product = state.products.find(p => p.id === item.product.id);
-          if (product && product.trackInventory) { // Only update if inventory is tracked
+          if (product && product.trackInventory) {
             const quantityToDeduct = item.weight || item.quantity;
             const updatedProduct = {
               ...product,
-              stock: product.stock - quantityToDeduct,
-              updatedAt: new Date(),
+              stock: Math.max(0, product.stock - quantityToDeduct)
             };
             await productsService.update(product.id, updatedProduct);
             dispatch({ type: 'UPDATE_PRODUCT', payload: updatedProduct });
           }
         } catch (error) {
           console.error(`Error updating inventory for product ${item.product.name}:`, error);
-          // Log the error but don't fail the entire transaction
         }
       }
 
-      // Update customer in Supabase and local state
+      // Update customer
       if (paymentMethod === 'credit' && state.selectedCustomer) {
         try {
           const updatedCustomer = {
@@ -325,11 +281,9 @@ export function CheckoutModal({ isOpen, onClose, onComplete }: CheckoutModalProp
           dispatch({ type: 'UPDATE_CUSTOMER', payload: updatedCustomer });
         } catch (error) {
           console.error('Error updating customer for credit payment:', error);
-          // Don't fail the entire transaction for customer update issues
         }
       } else if (state.selectedCustomer) {
         try {
-          // Update customer purchase history for other payment methods
           const updatedCustomer = {
             ...state.selectedCustomer,
             totalPurchases: state.selectedCustomer.totalPurchases + total,
@@ -339,7 +293,6 @@ export function CheckoutModal({ isOpen, onClose, onComplete }: CheckoutModalProp
           dispatch({ type: 'UPDATE_CUSTOMER', payload: updatedCustomer });
         } catch (error) {
           console.error('Error updating customer purchase history:', error);
-          // Don't fail the entire transaction for customer update issues
         }
       }
 
@@ -348,13 +301,11 @@ export function CheckoutModal({ isOpen, onClose, onComplete }: CheckoutModalProp
       setCompletedSale(savedSale);
       onComplete(savedSale);
       setIsProcessing(false);
-      
-      // Always show receipt print modal after successful payment
       setShowReceipt(true);
     } catch (error) {
       console.error('Payment processing error:', error);
       setIsProcessing(false);
-      swalConfig.error('Payment processing failed. Please try again.');
+      swalConfig.error('Error al procesar el pago. Por favor intenta de nuevo.');
     }
   };
 
@@ -368,14 +319,13 @@ export function CheckoutModal({ isOpen, onClose, onComplete }: CheckoutModalProp
 
   return (
     <>
-      {/* Only show checkout modal when receipt is not being shown and modal is open */}
       {!showReceipt && isOpen && (
         <div className="modal-overlay">
           <div className={`modal ${isTouchMode ? 'max-w-lg' : 'max-w-md'}`}>
             {/* Header */}
             <div className="modal-header">
               <h2 className={`font-bold text-gray-900 ${isTouchMode ? 'text-xl' : 'text-lg'}`}>
-                Complete Payment
+                Completar Pago
               </h2>
               <button
                 onClick={onClose}
@@ -393,7 +343,7 @@ export function CheckoutModal({ isOpen, onClose, onComplete }: CheckoutModalProp
                   <div className="flex items-start space-x-3">
                     <Gift className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
                     <div className="flex-1">
-                      <h4 className="font-semibold text-green-800 mb-2">Discounts Applied!</h4>
+                      <h4 className="font-semibold text-green-800 mb-2">¡Descuentos Aplicados!</h4>
                       <div className="space-y-1">
                         {appliedDiscounts.map((discount, index) => (
                           <div key={index} className="text-sm text-green-700">
@@ -405,7 +355,7 @@ export function CheckoutModal({ isOpen, onClose, onComplete }: CheckoutModalProp
                         ))}
                         {freeGifts.length > 0 && (
                           <div className="text-sm text-green-700">
-                            <span className="font-medium">Free Gifts: </span>
+                            <span className="font-medium">Regalos de Promoción: </span>
                             {freeGifts.map(gift => gift.product.name).join(', ')}
                           </div>
                         )}
@@ -424,7 +374,7 @@ export function CheckoutModal({ isOpen, onClose, onComplete }: CheckoutModalProp
               {/* Order Summary */}
               <div>
                 <h3 className={`font-semibold text-gray-900 mb-4 ${isTouchMode ? 'text-lg' : 'text-base'}`}>
-                  Order Summary
+                  Resumen de la Venta
                 </h3>
                 
                 <div className="space-y-2 mb-4 max-h-32 overflow-y-auto">
@@ -439,7 +389,7 @@ export function CheckoutModal({ isOpen, onClose, onComplete }: CheckoutModalProp
                   {freeGifts.map((gift, index) => (
                     <div key={`gift-${index}`} className="flex justify-between text-sm text-green-600">
                       <span className="truncate flex-1 mr-2">
-                        🎁 {gift.product.name} × {gift.quantity} (FREE)
+                        🎁 {gift.product.name} × {gift.quantity} (GRATIS)
                       </span>
                       <span className="font-medium">{state.settings.currency} 0.00</span>
                     </div>
@@ -453,16 +403,16 @@ export function CheckoutModal({ isOpen, onClose, onComplete }: CheckoutModalProp
                   </div>
                   {totalDiscount > 0 && (
                     <div className="flex justify-between text-green-600">
-                      <span>Total Discount:</span>
+                      <span>Descuento Total:</span>
                       <span className="font-medium">-{state.settings.currency} {totalDiscount.toFixed(2)}</span>
                     </div>
                   )}
                   <div className="flex justify-between">
-                    <span>Tax ({state.settings.taxRate}%):</span>
+                    <span>Impuesto ({state.settings.taxRate}%):</span>
                     <span className="font-medium">{state.settings.currency} {taxAmount.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between text-lg font-bold pt-2 border-t border-gray-200">
-                    <span>Total:</span>
+                    <span>Total a Pagar:</span>
                     <span>{state.settings.currency} {total.toFixed(2)}</span>
                   </div>
                 </div>
@@ -471,15 +421,15 @@ export function CheckoutModal({ isOpen, onClose, onComplete }: CheckoutModalProp
               {/* Payment Method */}
               <div>
                 <h3 className={`font-semibold text-gray-900 mb-4 ${isTouchMode ? 'text-lg' : 'text-base'}`}>
-                  Payment Method
+                  Método de Pago
                 </h3>
                 
                 <div className="grid grid-cols-2 gap-3">
                   {[
-                    { id: 'cash', label: 'Cash', icon: Banknote },
-                    { id: 'card', label: 'Card', icon: CreditCard },
-                    { id: 'digital', label: 'Digital', icon: Smartphone },
-                    { id: 'credit', label: 'Credit', icon: Receipt },
+                    { id: 'cash', label: 'Efectivo', icon: Banknote },
+                    { id: 'card', label: 'Tarjeta', icon: CreditCard },
+                    { id: 'digital', label: 'Digital / Yape / Plin', icon: Smartphone },
+                    { id: 'credit', label: 'Crédito Cliente', icon: Receipt },
                   ].map(({ id, label, icon: Icon }) => (
                     <button
                       key={id}
@@ -506,8 +456,8 @@ export function CheckoutModal({ isOpen, onClose, onComplete }: CheckoutModalProp
                     <AlertCircle className="h-5 w-5 text-red-500 flex-shrink-0" />
                     <span className="text-red-700 text-sm">
                       {state.selectedCustomer 
-                        ? 'Insufficient credit limit' 
-                        : 'Please select a customer for credit payment'
+                        ? 'Límite de crédito insuficiente para esta compra' 
+                        : 'Por favor selecciona un cliente para pagar con crédito'
                       }
                     </span>
                   </div>
@@ -518,15 +468,15 @@ export function CheckoutModal({ isOpen, onClose, onComplete }: CheckoutModalProp
                   <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-xl">
                     <div className="text-sm text-blue-800">
                       <div className="flex justify-between">
-                        <span>Credit Limit:</span>
+                        <span>Límite de Crédito:</span>
                         <span>{state.settings.currency} {state.selectedCustomer.creditLimit.toFixed(2)}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span>Used:</span>
+                        <span>Crédito Usado:</span>
                         <span>{state.settings.currency} {state.selectedCustomer.creditUsed.toFixed(2)}</span>
                       </div>
                       <div className="flex justify-between font-semibold border-t border-blue-200 pt-1 mt-1">
-                        <span>Available:</span>
+                        <span>Disponible:</span>
                         <span>{state.settings.currency} {(state.selectedCustomer.creditLimit - state.selectedCustomer.creditUsed).toFixed(2)}</span>
                       </div>
                     </div>
@@ -538,13 +488,13 @@ export function CheckoutModal({ isOpen, onClose, onComplete }: CheckoutModalProp
               {paymentMethod === 'cash' && (
                 <div>
                   <h3 className={`font-semibold text-gray-900 mb-4 ${isTouchMode ? 'text-lg' : 'text-base'}`}>
-                    Cash Payment
+                    Pago en Efectivo
                   </h3>
                   
                   <div className="space-y-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Amount Received *
+                        Monto Recibido *
                       </label>
                       <input
                         type="number"
@@ -553,7 +503,7 @@ export function CheckoutModal({ isOpen, onClose, onComplete }: CheckoutModalProp
                         value={amountPaid}
                         onChange={(e) => setAmountPaid(e.target.value)}
                         className={`input ${isTouchMode ? 'h-12 text-lg' : 'h-11'}`}
-                        placeholder={`Minimum: ${state.settings.currency} ${total.toFixed(2)}`}
+                        placeholder={`Mínimo: ${state.settings.currency} ${total.toFixed(2)}`}
                         disabled={isProcessing}
                       />
                     </div>
@@ -561,7 +511,7 @@ export function CheckoutModal({ isOpen, onClose, onComplete }: CheckoutModalProp
                     {amountPaid && parseFloat(amountPaid) >= total && (
                       <div className="bg-green-50 border border-green-200 rounded-xl p-4">
                         <div className="flex justify-between items-center">
-                          <span className="font-semibold text-green-800">Change Due:</span>
+                          <span className="font-semibold text-green-800">Cambio / Vuelto:</span>
                           <span className="text-lg font-bold text-green-800">
                             {state.settings.currency} {change.toFixed(2)}
                           </span>
@@ -576,13 +526,13 @@ export function CheckoutModal({ isOpen, onClose, onComplete }: CheckoutModalProp
               {paymentMethod === 'card' && (
                 <div>
                   <h3 className={`font-semibold text-gray-900 mb-4 ${isTouchMode ? 'text-lg' : 'text-base'}`}>
-                    Card Details
+                    Datos de la Tarjeta
                   </h3>
                   
                   <div className="space-y-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Bank Name *
+                        Banco Emisor *
                       </label>
                       <select
                         value={cardDetails.bankName}
@@ -590,8 +540,8 @@ export function CheckoutModal({ isOpen, onClose, onComplete }: CheckoutModalProp
                         className="select"
                         disabled={isProcessing}
                       >
-                        <option value="">Select Bank</option>
-                        {sriLankanBanks.map((bank) => (
+                        <option value="">Selecciona el Banco</option>
+                        {availableBanks.map((bank) => (
                           <option key={bank} value={bank}>{bank}</option>
                         ))}
                       </select>
@@ -599,20 +549,20 @@ export function CheckoutModal({ isOpen, onClose, onComplete }: CheckoutModalProp
                     
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Card Number *
+                        Número de Tarjeta *
                       </label>
                       <input
                         type="text"
                         value={cardDetails.cardNumber}
                         onChange={(e) => handleCardNumberChange(e.target.value)}
                         className="input"
-                        placeholder="Enter card number"
+                        placeholder="Ingresa el número de tarjeta"
                         disabled={isProcessing}
-                        maxLength={cardDetails.cardType === 'amex' ? 17 : 19} // Including spaces
+                        maxLength={cardDetails.cardType === 'amex' ? 17 : 19}
                       />
                       {cardDetails.cardType !== 'unknown' && cardDetails.cardNumber && (
                         <div className="mt-2 flex items-center space-x-2">
-                          <span className="text-sm text-gray-600">Detected:</span>
+                          <span className="text-sm text-gray-600">Detectada:</span>
                           <span className="text-sm font-medium capitalize text-blue-600">
                             {cardDetails.cardType}
                           </span>
@@ -626,14 +576,14 @@ export function CheckoutModal({ isOpen, onClose, onComplete }: CheckoutModalProp
                     
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Card Holder Name *
+                        Nombre del Titular *
                       </label>
                       <input
                         type="text"
                         value={cardDetails.holderName}
                         onChange={(e) => setCardDetails(prev => ({ ...prev, holderName: e.target.value }))}
                         className="input"
-                        placeholder="Name on card"
+                        placeholder="Nombre tal como figura en la tarjeta"
                         disabled={isProcessing}
                       />
                     </div>
@@ -645,12 +595,12 @@ export function CheckoutModal({ isOpen, onClose, onComplete }: CheckoutModalProp
               {paymentMethod === 'credit' && (
                 <div>
                   <h3 className={`font-semibold text-gray-900 mb-4 ${isTouchMode ? 'text-lg' : 'text-base'}`}>
-                    Credit Notes
+                    Observaciones del Crédito
                   </h3>
                   <textarea
                     value={creditNotes}
                     onChange={(e) => setCreditNotes(e.target.value)}
-                    placeholder="Add notes for credit transaction..."
+                    placeholder="Agregar observaciones o acuerdos para esta venta al crédito..."
                     className="textarea"
                     rows={3}
                     disabled={isProcessing}
@@ -667,7 +617,7 @@ export function CheckoutModal({ isOpen, onClose, onComplete }: CheckoutModalProp
                 className="btn btn-secondary btn-md px-6 py-3"
                 style={{ minHeight: '44px' }}
               >
-                Cancel
+                Cancelar
               </button>
               
               <button
@@ -679,12 +629,12 @@ export function CheckoutModal({ isOpen, onClose, onComplete }: CheckoutModalProp
                 {isProcessing ? (
                   <>
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                    <span>Processing...</span>
+                    <span>Procesando pago...</span>
                   </>
                 ) : (
                   <>
                     <Check className="h-4 w-4" />
-                    <span>Complete Payment</span>
+                    <span>Confirmar y Cobrar</span>
                   </>
                 )}
               </button>

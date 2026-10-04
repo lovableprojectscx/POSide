@@ -24,9 +24,9 @@ export function Header({ currentView, onViewChange }: HeaderProps) {
 
   const handleLogout = async () => {
     const result = await swalConfig.confirm(
-      'Sign Out Confirmation',
-      'Are you sure you want to sign out? You will be logged out of the system.',
-      'Sign Out'
+      'Cerrar Sesión',
+      '¿Estás seguro de que deseas salir del sistema?',
+      'Cerrar Sesión'
     );
     
     if (result.isConfirmed) {
@@ -34,7 +34,7 @@ export function Header({ currentView, onViewChange }: HeaderProps) {
         await signOut();
       } catch (error) {
         console.error('Error signing out:', error);
-        swalConfig.error('Failed to sign out. Please try again.');
+        swalConfig.error('Error al cerrar sesión. Por favor intenta de nuevo.');
       }
     }
   };
@@ -47,36 +47,36 @@ export function Header({ currentView, onViewChange }: HeaderProps) {
     const items = [];
 
     // POS - All roles can access
-    items.push({ id: 'pos', label: 'POS', icon: ShoppingCart, color: 'text-blue-600' });
+    items.push({ id: 'pos', label: 'Punto de Venta', icon: ShoppingCart, color: 'text-blue-600' });
 
     // Sales/Transactions - Manager and Admin only (Cashiers should only have POS access)
     if (role === 'admin' || role === 'manager') {
-      items.push({ id: 'transactions', label: 'Sales', icon: Receipt, color: 'text-green-600' });
+      items.push({ id: 'transactions', label: 'Ventas', icon: Receipt, color: 'text-green-600' });
     }
 
     // Inventory - Manager and Admin can access
     if (role === 'admin' || role === 'manager') {
-      items.push({ id: 'inventory', label: 'Inventory', icon: Package, color: 'text-purple-600' });
+      items.push({ id: 'inventory', label: 'Inventario', icon: Package, color: 'text-purple-600' });
     }
 
     // Customers - Manager and Admin can access
     if (role === 'admin' || role === 'manager') {
-      items.push({ id: 'customers', label: 'Customers', icon: Users, color: 'text-orange-600' });
+      items.push({ id: 'customers', label: 'Clientes', icon: Users, color: 'text-orange-600' });
     }
 
     // Discounts - Manager and Admin can access
     if (role === 'admin' || role === 'manager') {
-      items.push({ id: 'discounts', label: 'Discounts', icon: Percent, color: 'text-pink-600' });
+      items.push({ id: 'discounts', label: 'Descuentos', icon: Percent, color: 'text-pink-600' });
     }
 
     // Reports - Manager and Admin can access
     if (role === 'admin' || role === 'manager') {
-      items.push({ id: 'reports', label: 'Reports', icon: BarChart3, color: 'text-red-600' });
+      items.push({ id: 'reports', label: 'Reportes', icon: BarChart3, color: 'text-red-600' });
     }
 
     // Users - Admin only
     if (role === 'admin') {
-      items.push({ id: 'users', label: 'Users', icon: User, color: 'text-indigo-600' });
+      items.push({ id: 'users', label: 'Usuarios', icon: User, color: 'text-indigo-600' });
     }
 
     return items;
@@ -103,9 +103,11 @@ export function Header({ currentView, onViewChange }: HeaderProps) {
                 </div>
               )}
               <div className="hidden sm:block">
-                <h1 className="text-lg lg:text-xl font-bold text-gray-900 truncate max-w-48">
-                  {state.settings.storeName}
-                </h1>
+                <div className="flex items-center space-x-2">
+                  <h1 className="text-lg lg:text-xl font-bold text-gray-900 truncate max-w-48">
+                    {state.settings.storeName}
+                  </h1>
+                </div>
                 <p className="text-xs text-gray-500 hidden lg:block">Nextera POS System</p>
               </div>
             </div>
@@ -135,7 +137,7 @@ export function Header({ currentView, onViewChange }: HeaderProps) {
             <button
               onClick={toggleInterfaceMode}
               className="hidden md:flex items-center space-x-2 px-3 py-2 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors text-sm"
-              title={`Switch to ${state.settings.interfaceMode === 'touch' ? 'Traditional' : 'Touch'} Mode`}
+              title={`Cambiar a modo ${state.settings.interfaceMode === 'touch' ? 'Tradicional' : 'Táctil'}`}
             >
               {state.settings.interfaceMode === 'touch' ? (
                 <Monitor className="h-4 w-4" />
@@ -143,7 +145,7 @@ export function Header({ currentView, onViewChange }: HeaderProps) {
                 <Smartphone className="h-4 w-4" />
               )}
               <span className="hidden lg:block">
-                {state.settings.interfaceMode === 'touch' ? 'Touch' : 'Traditional'}
+                {state.settings.interfaceMode === 'touch' ? 'Táctil' : 'Tradicional'}
               </span>
             </button>
 
@@ -236,7 +238,7 @@ export function Header({ currentView, onViewChange }: HeaderProps) {
                   className="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all duration-200"
                 >
                   <Settings className="h-5 w-5 text-gray-500" />
-                  <span>Settings</span>
+                  <span>Configuración</span>
                 </button>
                 
                 <button
@@ -244,7 +246,7 @@ export function Header({ currentView, onViewChange }: HeaderProps) {
                   className="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium text-red-600 hover:bg-red-50 transition-all duration-200"
                 >
                   <LogOut className="h-5 w-5" />
-                  <span>Logout</span>
+                  <span>Cerrar Sesión</span>
                 </button>
               </div>
             </nav>

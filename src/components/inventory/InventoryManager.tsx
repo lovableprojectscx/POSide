@@ -65,15 +65,15 @@ export function InventoryManager() {
     const result = await swalConfig.deleteConfirm('product');
     if (result.isConfirmed) {
       try {
-        swalConfig.loading('Deleting product...');
+        swalConfig.loading('Eliminando producto...');
         const { productsService } = await import('../../lib/services');
         await productsService.delete(productId);
         // Re-fetch products or update state
         window.location.reload(); // Simple approach for now
-        swalConfig.success('Product deleted successfully!');
+        swalConfig.success('¡Producto eliminado correctamente!');
       } catch (error) {
         console.error('Error deleting product:', error);
-        swalConfig.error('Failed to delete product. Please try again.');
+        swalConfig.error('Error al eliminar el producto. Intente nuevamente.');
       }
     }
   };
@@ -88,8 +88,8 @@ export function InventoryManager() {
       {/* Header */}
       <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center space-y-4 lg:space-y-0">
         <div>
-          <h1 className="text-2xl lg:text-3xl font-bold text-gray-900">Inventory Management</h1>
-          <p className="text-gray-600 mt-1">Manage your products and stock levels</p>
+          <h1 className="text-2xl lg:text-3xl font-bold text-gray-900">Gestión de Inventario</h1>
+          <p className="text-gray-600 mt-1">Administra tus productos y niveles de existencias</p>
         </div>
         
         <button
@@ -97,7 +97,7 @@ export function InventoryManager() {
           className="btn btn-primary btn-lg"
         >
           <Plus className="h-5 w-5" />
-          <span>Add Product</span>
+          <span>Agregar Producto</span>
         </button>
       </div>
 
@@ -106,7 +106,7 @@ export function InventoryManager() {
         <div className="stat-card bg-gradient-to-br from-blue-500 to-blue-600">
           <div className="flex items-center justify-between relative z-10">
             <div>
-              <p className="text-blue-100 text-sm font-medium">Total Products</p>
+              <p className="text-blue-100 text-sm font-medium">Total de Productos</p>
               <p className="text-2xl lg:text-3xl font-bold">{state.products.length}</p>
             </div>
             <div className="bg-white/20 p-3 rounded-2xl">
@@ -118,7 +118,7 @@ export function InventoryManager() {
         <div className="stat-card bg-gradient-to-br from-orange-500 to-orange-600">
           <div className="flex items-center justify-between relative z-10">
             <div>
-              <p className="text-orange-100 text-sm font-medium">Low Stock Items</p>
+              <p className="text-orange-100 text-sm font-medium">Stock Bajo</p>
               <p className="text-2xl lg:text-3xl font-bold">{lowStockProducts.length}</p>
             </div>
             <div className="bg-white/20 p-3 rounded-2xl">
@@ -130,7 +130,7 @@ export function InventoryManager() {
         <div className="stat-card bg-gradient-to-br from-green-500 to-green-600">
           <div className="flex items-center justify-between relative z-10">
             <div>
-              <p className="text-green-100 text-sm font-medium">Inventory Value</p>
+              <p className="text-green-100 text-sm font-medium">Valor del Inventario</p>
               <p className="text-xl lg:text-2xl font-bold">$ {totalValue.toFixed(2)}</p>
             </div>
             <div className="bg-white/20 p-3 rounded-2xl">
@@ -142,7 +142,7 @@ export function InventoryManager() {
         <div className="stat-card bg-gradient-to-br from-red-500 to-red-600">
           <div className="flex items-center justify-between relative z-10">
             <div>
-              <p className="text-red-100 text-sm font-medium">Out of Stock</p>
+              <p className="text-red-100 text-sm font-medium">Agotados</p>
               <p className="text-2xl lg:text-3xl font-bold">{outOfStockProducts.length}</p>
             </div>
             <div className="bg-white/20 p-3 rounded-2xl">
@@ -160,7 +160,7 @@ export function InventoryManager() {
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
               <input
                 type="text"
-                placeholder="Search products..."
+                placeholder="Buscar productos..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="input pl-10"
@@ -173,7 +173,7 @@ export function InventoryManager() {
               className="select min-w-[150px]"
             >
               {categories.map(category => (
-                <option key={category} value={category}>{category}</option>
+                <option key={category} value={category}>{category === 'All' ? 'Todas las categorías' : category}</option>
               ))}
             </select>
 
@@ -186,12 +186,12 @@ export function InventoryManager() {
               }}
               className="select min-w-[150px]"
             >
-              <option value="name-asc">Name A-Z</option>
-              <option value="name-desc">Name Z-A</option>
-              <option value="stock-asc">Stock Low-High</option>
-              <option value="stock-desc">Stock High-Low</option>
-              <option value="price-asc">Price Low-High</option>
-              <option value="price-desc">Price High-Low</option>
+              <option value="name-asc">Nombre (A - Z)</option>
+              <option value="name-desc">Nombre (Z - A)</option>
+              <option value="stock-asc">Stock (Menor a Mayor)</option>
+              <option value="stock-desc">Stock (Mayor a Menor)</option>
+              <option value="price-asc">Precio (Menor a Mayor)</option>
+              <option value="price-desc">Precio (Mayor a Menor)</option>
             </select>
           </div>
         </div>
@@ -203,14 +203,14 @@ export function InventoryManager() {
           <table className="table">
             <thead className="table-header">
               <tr>
-                <th className="table-header-cell">Product</th>
+                <th className="table-header-cell">Producto</th>
                 <th className="table-header-cell">SKU</th>
-                <th className="table-header-cell">Category</th>
-                <th className="table-header-cell">Price</th>
-                <th className="table-header-cell">Cost</th>
+                <th className="table-header-cell">Categoría</th>
+                <th className="table-header-cell">Precio</th>
+                <th className="table-header-cell">Costo</th>
                 <th className="table-header-cell">Stock</th>
-                <th className="table-header-cell">Status</th>
-                <th className="table-header-cell text-right">Actions</th>
+                <th className="table-header-cell">Estado</th>
+                <th className="table-header-cell text-right">Acciones</th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
@@ -261,19 +261,21 @@ export function InventoryManager() {
                           ? 'badge-warning'
                           : 'badge-success'
                       }`}>
-                        {isOutOfStock ? 'Out of Stock' : isLowStock ? 'Low Stock' : 'In Stock'}
+                        {isOutOfStock ? 'Agotado' : isLowStock ? 'Stock Bajo' : 'En Stock'}
                       </span>
                     </td>
                     <td className="table-cell text-right">
                       <div className="flex items-center justify-end space-x-2">
                         <button
                           onClick={() => handleEditProduct(product)}
+                          title="Editar producto"
                           className="text-blue-600 hover:text-blue-900 p-2 rounded-lg hover:bg-blue-50 transition-colors"
                         >
                           <Edit className="h-4 w-4" />
                         </button>
                         <button
                           onClick={() => handleDeleteProduct(product.id)}
+                          title="Eliminar producto"
                           className="text-red-600 hover:text-red-900 p-2 rounded-lg hover:bg-red-50 transition-colors"
                         >
                           <Trash2 className="h-4 w-4" />

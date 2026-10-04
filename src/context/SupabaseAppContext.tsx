@@ -73,12 +73,12 @@ const initialState: AppState = {
   currentUser: null,
   selectedCustomer: null,
   settings: {
-    storeName: 'Nextera POS',
-    storeAddress: '123 Business Street, Colombo 03, Sri Lanka',
-    storePhone: '+94 11 234 5678',
-    storeEmail: 'info@nexterapos.lk',
-    taxRate: 0,
-    currency: 'LKR',
+    storeName: 'POS IDENZA',
+    storeAddress: 'Lima, Perú',
+    storePhone: '',
+    storeEmail: 'contacto@posidenza.pe',
+    taxRate: 18,
+    currency: 'S/',
     interfaceMode: 'touch',
     autoBackup: true,
     receiptPrinter: true,
@@ -216,8 +216,17 @@ function appReducer(state: AppState, action: AppAction): AppState {
         cart: activeTab?.cart || [],
         selectedCustomer: activeTab?.selectedCustomer || null,
       };
-    case 'SET_SALES_TABS':
-      return { ...state, salesTabs: action.payload };
+    case 'SET_SALES_TABS': {
+      const activeTabId = state.activeSalesTab || (action.payload.length > 0 ? action.payload[0].id : '');
+      const activeTab = action.payload.find(tab => tab.id === activeTabId) || (action.payload.length > 0 ? action.payload[0] : null);
+      return { 
+        ...state, 
+        salesTabs: action.payload,
+        activeSalesTab: activeTabId,
+        cart: state.cart.length > 0 ? state.cart : (activeTab?.cart || []),
+        selectedCustomer: state.selectedCustomer || (activeTab?.selectedCustomer || null),
+      };
+    }
     default:
       return state;
   }

@@ -33,7 +33,7 @@ export function SalesTabManager() {
       }
 
       const newTabData: Omit<SalesTab, 'id' | 'createdAt'> = {
-        name: `Sale ${state.salesTabs.length + 1}`,
+        name: `Venta ${state.salesTabs.length + 1}`,
         cart: [],
         selectedCustomer: null,
       };
@@ -110,7 +110,7 @@ export function SalesTabManager() {
                 {/* Rotated Text Label */}
                 <div className="transform rotate-90 whitespace-nowrap">
                   <span className="text-xs font-medium">
-                    Sale {tabNumber}
+                    Venta {tabNumber}
                   </span>
                 </div>
 
@@ -148,7 +148,7 @@ export function SalesTabManager() {
         <button
           onClick={createNewTab}
           className="w-12 h-10 bg-green-600 hover:bg-green-700 text-white rounded-md transition-colors flex items-center justify-center mx-auto"
-          title="Add New Sale"
+          title="Nueva Venta"
         >
           <Plus className="h-4 w-4" />
         </button>

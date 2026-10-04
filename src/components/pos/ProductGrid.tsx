@@ -87,7 +87,7 @@ export function ProductGrid({ onAddToCart }: ProductGridProps) {
               <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
               <input
                 type="text"
-                placeholder="Search products by name, SKU, or barcode..."
+                placeholder="Buscar productos por nombre, SKU o código de barra..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className={`input pl-12 ${isTouchMode ? 'h-14 text-lg' : 'h-12'}`}
@@ -122,7 +122,7 @@ export function ProductGrid({ onAddToCart }: ProductGridProps) {
                         : 'btn-secondary'
                     } ${isTouchMode ? 'btn-lg touch-friendly' : 'btn-md'}`}
                   >
-                    {category}
+                    {category === 'All' ? 'Todos' : category}
                   </button>
                 ))}
               </div>
@@ -148,8 +148,8 @@ export function ProductGrid({ onAddToCart }: ProductGridProps) {
               <div className="bg-gray-100 p-6 rounded-3xl mb-4">
                 <Package className="h-16 w-16 text-gray-400" />
               </div>
-              <p className="text-gray-500 text-lg font-medium">No products found</p>
-              <p className="text-gray-400 text-sm mt-1">Try adjusting your search or filters</p>
+              <p className="text-gray-500 text-lg font-medium">No se encontraron productos</p>
+              <p className="text-gray-400 text-sm mt-1">Intenta ajustar tu búsqueda o categoría seleccionada</p>
             </div>
           ) : (
             <div className={`grid gap-4 lg:gap-6 ${
@@ -176,7 +176,7 @@ export function ProductGrid({ onAddToCart }: ProductGridProps) {
         <div className="modal-overlay">
           <div className="modal max-w-sm">
             <div className="modal-header">
-              <h3 className="text-lg font-bold text-gray-900">Enter Weight</h3>
+              <h3 className="text-lg font-bold text-gray-900">Ingresar Peso</h3>
               <button
                 onClick={() => setShowWeightModal(null)}
                 className="text-gray-400 hover:text-gray-600"
@@ -192,13 +192,13 @@ export function ProductGrid({ onAddToCart }: ProductGridProps) {
                 </div>
                 <h4 className="font-semibold text-gray-900">{showWeightModal.name}</h4>
                 <p className="text-sm text-gray-600">
-                  {state.settings.currency} {showWeightModal.pricePerUnit?.toFixed(2)} per {showWeightModal.unit}
+                  {state.settings.currency} {showWeightModal.pricePerUnit?.toFixed(2)} por {showWeightModal.unit}
                 </p>
               </div>
               
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Weight ({showWeightModal.unit})
+                  Peso ({showWeightModal.unit})
                 </label>
                 <input
                   type="number"
@@ -206,7 +206,7 @@ export function ProductGrid({ onAddToCart }: ProductGridProps) {
                   value={weight}
                   onChange={(e) => setWeight(e.target.value)}
                   className="input"
-                  placeholder={`Enter weight in ${showWeightModal.unit}`}
+                  placeholder={`Ingresa el peso en ${showWeightModal.unit}`}
                   autoFocus
                 />
               </div>
@@ -214,7 +214,7 @@ export function ProductGrid({ onAddToCart }: ProductGridProps) {
               {weight && parseFloat(weight) > 0 && (
                 <div className="bg-blue-50 p-3 rounded-xl">
                   <div className="flex justify-between text-sm">
-                    <span>Total Price:</span>
+                    <span>Importe Calculado:</span>
                     <span className="font-semibold">
                       {state.settings.currency} {((showWeightModal.pricePerUnit || 0) * parseFloat(weight)).toFixed(2)}
                     </span>
@@ -228,14 +228,14 @@ export function ProductGrid({ onAddToCart }: ProductGridProps) {
                 onClick={() => setShowWeightModal(null)}
                 className="btn btn-secondary btn-md"
               >
-                Cancel
+                Cancelar
               </button>
               <button
                 onClick={handleWeightSubmit}
                 disabled={!weight || parseFloat(weight) <= 0}
                 className="btn btn-primary btn-md disabled:opacity-50"
               >
-                Add to Cart
+                Agregar al Carrito
               </button>
             </div>
           </div>
@@ -253,8 +253,6 @@ interface ProductCardProps {
 }
 
 function ProductCard({ product, onAddToCart, isTouchMode, currency }: ProductCardProps) {
-  // Only check stock levels if inventory tracking is enabled
-  // Default to true if trackInventory is undefined (for backwards compatibility)
   const shouldTrackInventory = product.trackInventory !== false;
   const isLowStock = shouldTrackInventory ? product.stock <= product.minStock : false;
   const isOutOfStock = shouldTrackInventory ? product.stock === 0 : false;
@@ -294,13 +292,13 @@ function ProductCard({ product, onAddToCart, isTouchMode, currency }: ProductCar
           {/* Stock Status Badge */}
           {isOutOfStock && (
             <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-2xl">
-              <span className="text-white font-semibold text-sm">Out of Stock</span>
+              <span className="text-white font-semibold text-sm">Agotado</span>
             </div>
           )}
           
           {isLowStock && !isOutOfStock && (
             <div className="absolute bottom-2 right-2 bg-orange-500 text-white text-xs font-semibold px-2 py-1 rounded-full">
-              Low Stock
+              Stock Bajo
             </div>
           )}
         </div>
@@ -327,7 +325,7 @@ function ProductCard({ product, onAddToCart, isTouchMode, currency }: ProductCar
             } ${isTouchMode ? 'text-sm' : 'text-xs'}`}>
               {shouldTrackInventory 
                 ? `Stock: ${product.stock}${product.isWeightBased ? product.unit : ''}`
-                : 'Unlimited stock'
+                : 'Stock ilimitado'
               }
             </span>
           </div>
@@ -345,7 +343,7 @@ function ProductCard({ product, onAddToCart, isTouchMode, currency }: ProductCar
           }`}
         >
           {product.isWeightBased ? <Scale className={`${isTouchMode ? 'h-5 w-5' : 'h-4 w-4'}`} /> : <Plus className={`${isTouchMode ? 'h-5 w-5' : 'h-4 w-4'}`} />}
-          <span>{isOutOfStock ? 'Out of Stock' : product.isWeightBased ? 'Enter Weight' : 'Add to Cart'}</span>
+          <span>{isOutOfStock ? 'Agotado' : product.isWeightBased ? 'Pesar / Agregar' : 'Agregar'}</span>
         </button>
       </div>
     </div>

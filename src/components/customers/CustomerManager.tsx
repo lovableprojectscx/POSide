@@ -32,14 +32,14 @@ export function CustomerManager() {
     const result = await swalConfig.deleteConfirm('customer');
     if (result.isConfirmed) {
       try {
-        swalConfig.loading('Deleting customer...');
+        swalConfig.loading('Eliminando cliente...');
         const { customersService } = await import('../../lib/services');
         await customersService.delete(customerId);
         dispatch({ type: 'DELETE_CUSTOMER', payload: customerId });
-        swalConfig.success('Customer deleted successfully!');
+        swalConfig.success('¡Cliente eliminado correctamente!');
       } catch (error) {
         console.error('Error deleting customer:', error);
-        swalConfig.error('Failed to delete customer. Please try again.');
+        swalConfig.error('Error al eliminar el cliente. Intente nuevamente.');
       }
     }
   };
@@ -63,7 +63,7 @@ export function CustomerManager() {
         <div className="bg-gradient-to-r from-blue-500 to-blue-600 p-4 md:p-6 rounded-2xl text-white">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-blue-100 text-sm font-medium">Total Customers</p>
+              <p className="text-blue-100 text-sm font-medium">Total Clientes</p>
               <p className="text-2xl md:text-3xl font-bold">{totalCustomers}</p>
             </div>
             <User className="h-8 w-8 text-blue-200" />
@@ -73,7 +73,7 @@ export function CustomerManager() {
         <div className="bg-gradient-to-r from-green-500 to-green-600 p-4 md:p-6 rounded-2xl text-white">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-green-100 text-sm font-medium">Total Purchases</p>
+              <p className="text-green-100 text-sm font-medium">Total Compras</p>
               <p className="text-xl md:text-2xl font-bold">$ {totalPurchases.toFixed(2)}</p>
             </div>
             <CreditCard className="h-8 w-8 text-green-200" />
@@ -83,7 +83,7 @@ export function CustomerManager() {
         <div className="bg-gradient-to-r from-purple-500 to-purple-600 p-4 md:p-6 rounded-2xl text-white">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-purple-100 text-sm font-medium">Average Purchase</p>
+              <p className="text-purple-100 text-sm font-medium">Compra Promedio</p>
               <p className="text-xl md:text-2xl font-bold">$ {averagePurchase.toFixed(2)}</p>
             </div>
             <Mail className="h-8 w-8 text-purple-200" />
@@ -93,7 +93,7 @@ export function CustomerManager() {
         <div className="bg-gradient-to-r from-orange-500 to-orange-600 p-4 md:p-6 rounded-2xl text-white">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-orange-100 text-sm font-medium">Active (30 days)</p>
+              <p className="text-orange-100 text-sm font-medium">Activos (30 días)</p>
               <p className="text-2xl md:text-3xl font-bold">{activeCustomers}</p>
             </div>
             <Phone className="h-8 w-8 text-orange-200" />
@@ -108,7 +108,7 @@ export function CustomerManager() {
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
             <input
               type="text"
-              placeholder="Search customers..."
+              placeholder="Buscar clientes por nombre, correo o teléfono..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -120,7 +120,7 @@ export function CustomerManager() {
             className="flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all font-semibold shadow-lg hover:shadow-xl whitespace-nowrap"
           >
             <Plus className="h-5 w-5" />
-            <span>Add Customer</span>
+            <span>Agregar Cliente</span>
           </button>
         </div>
       </div>
@@ -132,22 +132,22 @@ export function CustomerManager() {
             <thead className="bg-gray-50">
               <tr>
                 <th className="px-4 md:px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                  Customer
+                  Cliente
                 </th>
                 <th className="px-4 md:px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                  Contact
+                  Contacto
                 </th>
                 <th className="px-4 md:px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                  Total Purchases
+                  Total Compras
                 </th>
                 <th className="px-4 md:px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                  Price Tier
+                  Nivel de Precio
                 </th>
                 <th className="px-4 md:px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider hidden sm:table-cell">
-                  Last Purchase
+                  Última Compra
                 </th>
                 <th className="px-4 md:px-6 py-4 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                  Actions
+                  Acciones
                 </th>
               </tr>
             </thead>
@@ -180,7 +180,7 @@ export function CustomerManager() {
                   <td className="px-4 md:px-6 py-4 whitespace-nowrap text-sm text-gray-900 hidden sm:table-cell">
                     {customer.lastPurchase 
                       ? new Date(customer.lastPurchase).toLocaleDateString()
-                      : 'Never'
+                      : 'Nunca'
                     }
                   </td>
                   <td className="px-4 md:px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
@@ -188,21 +188,21 @@ export function CustomerManager() {
                       <button
                         onClick={() => handleViewCustomer(customer)}
                         className="text-green-600 hover:text-green-900 p-2 rounded-lg hover:bg-green-50 transition-colors"
-                        title="View Details"
+                        title="Ver Detalles"
                       >
                         <Eye className="h-4 w-4" />
                       </button>
                       <button
                         onClick={() => handleEditCustomer(customer)}
                         className="text-blue-600 hover:text-blue-900 p-2 rounded-lg hover:bg-blue-50 transition-colors"
-                        title="Edit Customer"
+                        title="Editar Cliente"
                       >
                         <Edit className="h-4 w-4" />
                       </button>
                       <button
                         onClick={() => handleDeleteCustomer(customer.id)}
                         className="text-red-600 hover:text-red-900 p-2 rounded-lg hover:bg-red-50 transition-colors"
-                        title="Delete Customer"
+                        title="Eliminar Cliente"
                       >
                         <Trash2 className="h-4 w-4" />
                       </button>

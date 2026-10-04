@@ -119,7 +119,7 @@ export function ReportsManager() {
     // Add walk-in customers
     customerStats['walk-in'] = {
       id: 'walk-in',
-      name: 'Walk-in Customers',
+      name: 'Clientes Generales',
       totalSpent: 0,
       totalTransactions: 0,
       totalItems: 0,
@@ -211,25 +211,25 @@ export function ReportsManager() {
     let fileName = '';
 
     if (reportType === 'sales') {
-      csvHeader = 'Date,Invoice Number,Customer,Items,Total,Discount,Cashier\n';
+      csvHeader = 'Fecha,Número de Factura,Cliente,Artículos,Total,Descuento,Cajero\n';
       csvData = filteredSales.map(sale => {
-        const customerName = sale.customerId ? state.customers.find(c => c.id === sale.customerId)?.name || 'Walk-in Customer' : 'Walk-in Customer';
+        const customerName = sale.customerId ? state.customers.find(c => c.id === sale.customerId)?.name || 'Cliente General' : 'Cliente General';
         const itemCount = sale.items.length;
         return `${format(new Date(sale.timestamp), 'yyyy-MM-dd HH:mm:ss')},${sale.invoiceNumber},${customerName},${itemCount},${sale.total.toFixed(2)},${sale.discountAmount.toFixed(2)},${sale.cashier}`;
       }).join('\n');
-      fileName = `pos-sales-report-${format(new Date(), 'yyyy-MM-dd')}.csv`;
+      fileName = `reporte-ventas-pos-${format(new Date(), 'yyyy-MM-dd')}.csv`;
     } else if (reportType === 'customers') {
-      csvHeader = 'Customer Name,Total Spent,Total Transactions,Total Items,Avg Transaction Value,Last Purchase\n';
+      csvHeader = 'Nombre del Cliente,Total Gastado,Total Transacciones,Total Artículos,Valor Promedio Transacción,Última Compra\n';
       csvData = customerData.map(customer => {
         return `${customer.name},${customer.totalSpent.toFixed(2)},${customer.totalTransactions},${customer.totalItems},${customer.avgTransactionValue.toFixed(2)},${format(customer.lastPurchase, 'yyyy-MM-dd HH:mm:ss')}`;
       }).join('\n');
-      fileName = `pos-customers-report-${format(new Date(), 'yyyy-MM-dd')}.csv`;
+      fileName = `reporte-clientes-pos-${format(new Date(), 'yyyy-MM-dd')}.csv`;
     } else if (reportType === 'inventory') {
-      csvHeader = 'Product Name,SKU,Category,Current Stock,Min Stock,Stock Status,Cost Price,Selling Price,Stock Value,Potential Revenue,Sold Quantity,Revenue,Turnover Ratio,Profit Margin %,Active\n';
+      csvHeader = 'Nombre del Producto,SKU,Categoría,Stock Actual,Stock Mínimo,Estado,Precio de Costo,Precio de Venta,Valor de Stock,Ingresos Potenciales,Cantidad Vendida,Ingresos,Rotación,Margen %,Activo\n';
       csvData = inventoryData.map(item => {
-        return `${item.name},${item.sku},${item.category},${item.currentStock},${item.minStock},${item.stockStatus},${item.costPrice.toFixed(2)},${item.sellingPrice.toFixed(2)},${item.stockValue.toFixed(2)},${item.potentialRevenue.toFixed(2)},${item.soldQuantity},${item.revenue.toFixed(2)},${item.turnoverRatio.toFixed(2)},${item.profitMargin.toFixed(2)},${item.active ? 'Yes' : 'No'}`;
+        return `${item.name},${item.sku},${item.category},${item.currentStock},${item.minStock},${item.stockStatus},${item.costPrice.toFixed(2)},${item.sellingPrice.toFixed(2)},${item.stockValue.toFixed(2)},${item.potentialRevenue.toFixed(2)},${item.soldQuantity},${item.revenue.toFixed(2)},${item.turnoverRatio.toFixed(2)},${item.profitMargin.toFixed(2)},${item.active ? 'Sí' : 'No'}`;
       }).join('\n');
-      fileName = `pos-inventory-report-${format(new Date(), 'yyyy-MM-dd')}.csv`;
+      fileName = `reporte-inventario-pos-${format(new Date(), 'yyyy-MM-dd')}.csv`;
     }
     
     const fullCsv = csvHeader + csvData;
@@ -246,9 +246,9 @@ export function ReportsManager() {
       {/* Header */}
       <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center space-y-4 lg:space-y-0">
         <div>
-          <h1 className="text-2xl lg:text-3xl font-bold text-gray-900">Reports & Analytics</h1>
+          <h1 className="text-2xl lg:text-3xl font-bold text-gray-900">Reportes y Estadísticas</h1>
           <p className="text-gray-600 mt-1">
-            {format(validStartDate, 'MMM dd, yyyy')} - {format(validEndDate, 'MMM dd, yyyy')}
+            {format(validStartDate, 'dd/MM/yyyy')} - {format(validEndDate, 'dd/MM/yyyy')}
           </p>
         </div>
         
@@ -257,7 +257,7 @@ export function ReportsManager() {
           className="btn btn-primary btn-lg"
         >
           <Download className="h-5 w-5" />
-          <span>Export Report</span>
+          <span>Exportar Reporte</span>
         </button>
       </div>
 
@@ -266,7 +266,7 @@ export function ReportsManager() {
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 sm:space-y-0 gap-4">
           <div className="flex items-center space-x-2">
             <BarChart3 className="h-5 w-5 text-gray-400" />
-            <span className="font-medium text-gray-700">Report Filters</span>
+            <span className="font-medium text-gray-700">Filtros de Reporte</span>
           </div>
           
           <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 w-full sm:w-auto">
@@ -275,9 +275,9 @@ export function ReportsManager() {
               onChange={(e) => setReportType(e.target.value)}
               className="select min-w-[150px]"
             >
-              <option value="sales">Sales Report</option>
-              <option value="inventory">Inventory Report</option>
-              <option value="customers">Customer Report</option>
+              <option value="sales">Reporte de Ventas</option>
+              <option value="inventory">Reporte de Inventario</option>
+              <option value="customers">Reporte de Clientes</option>
             </select>
 
             <select
@@ -295,11 +295,11 @@ export function ReportsManager() {
               }}
               className="select min-w-[150px]"
             >
-              <option value="1">Today</option>
-              <option value="7">Last 7 Days</option>
-              <option value="30">Last 30 Days</option>
-              <option value="90">Last 90 Days</option>
-              <option value="custom">Custom Range</option>
+              <option value="1">Hoy</option>
+              <option value="7">Últimos 7 Días</option>
+              <option value="30">Últimos 30 Días</option>
+              <option value="90">Últimos 90 Días</option>
+              <option value="custom">Rango Personalizado</option>
             </select>
             
             {dateRange === 'custom' && (
@@ -311,7 +311,7 @@ export function ReportsManager() {
                   className="input input-sm"
                   max={format(new Date(), 'yyyy-MM-dd')}
                 />
-                <span className="text-sm">to</span>
+                <span className="text-sm">al</span>
                 <input
                   type="date"
                   value={endDateInput}
@@ -331,7 +331,7 @@ export function ReportsManager() {
           <div className="stat-card bg-gradient-to-br from-green-500 to-green-600">
             <div className="flex items-center justify-between relative z-10">
               <div>
-                <p className="text-green-100 text-sm font-medium">Total Revenue</p>
+                <p className="text-green-100 text-sm font-medium">Ingresos Totales</p>
                 <p className="text-xl lg:text-2xl font-bold">{state.settings.currency} {totalRevenue.toFixed(2)}</p>
               </div>
               <div className="bg-white/20 p-3 rounded-2xl">
@@ -343,7 +343,7 @@ export function ReportsManager() {
           <div className="stat-card bg-gradient-to-br from-blue-500 to-blue-600">
             <div className="flex items-center justify-between relative z-10">
               <div>
-                <p className="text-blue-100 text-sm font-medium">Transactions</p>
+                <p className="text-blue-100 text-sm font-medium">Transacciones</p>
                 <p className="text-2xl lg:text-3xl font-bold">{totalTransactions}</p>
               </div>
               <div className="bg-white/20 p-3 rounded-2xl">
@@ -355,7 +355,7 @@ export function ReportsManager() {
           <div className="stat-card bg-gradient-to-br from-purple-500 to-purple-600">
             <div className="flex items-center justify-between relative z-10">
               <div>
-                <p className="text-purple-100 text-sm font-medium">Avg. Transaction</p>
+                <p className="text-purple-100 text-sm font-medium">Ticket Promedio</p>
                 <p className="text-xl lg:text-2xl font-bold">{state.settings.currency} {averageTransaction.toFixed(2)}</p>
               </div>
               <div className="bg-white/20 p-3 rounded-2xl">
@@ -367,7 +367,7 @@ export function ReportsManager() {
           <div className="stat-card bg-gradient-to-br from-orange-500 to-orange-600">
             <div className="flex items-center justify-between relative z-10">
               <div>
-                <p className="text-orange-100 text-sm font-medium">Total Discounts</p>
+                <p className="text-orange-100 text-sm font-medium">Total Descuentos</p>
                 <p className="text-xl lg:text-2xl font-bold">{state.settings.currency} {totalDiscounts.toFixed(2)}</p>
               </div>
               <div className="bg-white/20 p-3 rounded-2xl">
@@ -383,7 +383,7 @@ export function ReportsManager() {
           <div className="stat-card bg-gradient-to-br from-blue-500 to-blue-600">
             <div className="flex items-center justify-between relative z-10">
               <div>
-                <p className="text-blue-100 text-sm font-medium">Total Customers</p>
+                <p className="text-blue-100 text-sm font-medium">Total Clientes</p>
                 <p className="text-2xl lg:text-3xl font-bold">{state.customers.length}</p>
               </div>
               <div className="bg-white/20 p-3 rounded-2xl">
@@ -395,7 +395,7 @@ export function ReportsManager() {
           <div className="stat-card bg-gradient-to-br from-green-500 to-green-600">
             <div className="flex items-center justify-between relative z-10">
               <div>
-                <p className="text-green-100 text-sm font-medium">Active Customers</p>
+                <p className="text-green-100 text-sm font-medium">Clientes Activos</p>
                 <p className="text-xl lg:text-2xl font-bold">{customerData.filter(c => c.totalTransactions > 0).length}</p>
               </div>
               <div className="bg-white/20 p-3 rounded-2xl">
@@ -407,7 +407,7 @@ export function ReportsManager() {
           <div className="stat-card bg-gradient-to-br from-purple-500 to-purple-600">
             <div className="flex items-center justify-between relative z-10">
               <div>
-                <p className="text-purple-100 text-sm font-medium">Avg. Customer Value</p>
+                <p className="text-purple-100 text-sm font-medium">Valor Promedio Cliente</p>
                 <p className="text-xl lg:text-2xl font-bold">{state.settings.currency} {(customerData.reduce((sum, c) => sum + c.totalSpent, 0) / Math.max(customerData.filter(c => c.totalTransactions > 0).length, 1)).toFixed(2)}</p>
               </div>
               <div className="bg-white/20 p-3 rounded-2xl">
@@ -419,7 +419,7 @@ export function ReportsManager() {
           <div className="stat-card bg-gradient-to-br from-orange-500 to-orange-600">
             <div className="flex items-center justify-between relative z-10">
               <div>
-                <p className="text-orange-100 text-sm font-medium">Top Customer</p>
+                <p className="text-orange-100 text-sm font-medium">Cliente Principal</p>
                 <p className="text-lg lg:text-xl font-bold">{customerData[0]?.name || 'N/A'}</p>
                 <p className="text-orange-100 text-xs">{customerData[0] ? `${state.settings.currency} ${customerData[0].totalSpent.toFixed(2)}` : ''}</p>
               </div>
@@ -436,7 +436,7 @@ export function ReportsManager() {
           <div className="stat-card bg-gradient-to-br from-blue-500 to-blue-600">
             <div className="flex items-center justify-between relative z-10">
               <div>
-                <p className="text-blue-100 text-sm font-medium">Total Products</p>
+                <p className="text-blue-100 text-sm font-medium">Total de Productos</p>
                 <p className="text-2xl lg:text-3xl font-bold">{state.products.length}</p>
               </div>
               <div className="bg-white/20 p-3 rounded-2xl">
@@ -448,7 +448,7 @@ export function ReportsManager() {
           <div className="stat-card bg-gradient-to-br from-red-500 to-red-600">
             <div className="flex items-center justify-between relative z-10">
               <div>
-                <p className="text-red-100 text-sm font-medium">Low Stock Items</p>
+                <p className="text-red-100 text-sm font-medium">Stock Bajo / Agotados</p>
                 <p className="text-xl lg:text-2xl font-bold">{inventoryData.filter(item => item.stockStatus === 'Low Stock' || item.stockStatus === 'Out of Stock').length}</p>
               </div>
               <div className="bg-white/20 p-3 rounded-2xl">
@@ -460,7 +460,7 @@ export function ReportsManager() {
           <div className="stat-card bg-gradient-to-br from-green-500 to-green-600">
             <div className="flex items-center justify-between relative z-10">
               <div>
-                <p className="text-green-100 text-sm font-medium">Total Stock Value</p>
+                <p className="text-green-100 text-sm font-medium">Valor Total del Inventario</p>
                 <p className="text-xl lg:text-2xl font-bold">{state.settings.currency} {inventoryData.reduce((sum, item) => sum + item.stockValue, 0).toFixed(2)}</p>
               </div>
               <div className="bg-white/20 p-3 rounded-2xl">
@@ -472,7 +472,7 @@ export function ReportsManager() {
           <div className="stat-card bg-gradient-to-br from-purple-500 to-purple-600">
             <div className="flex items-center justify-between relative z-10">
               <div>
-                <p className="text-purple-100 text-sm font-medium">Potential Revenue</p>
+                <p className="text-purple-100 text-sm font-medium">Ingreso Potencial</p>
                 <p className="text-xl lg:text-2xl font-bold">{state.settings.currency} {inventoryData.reduce((sum, item) => sum + item.potentialRevenue, 0).toFixed(2)}</p>
               </div>
               <div className="bg-white/20 p-3 rounded-2xl">
@@ -490,7 +490,7 @@ export function ReportsManager() {
           <div className="card p-6">
             <h3 className="text-lg font-bold text-gray-900 mb-6 flex items-center">
               <TrendingUp className="h-5 w-5 mr-2 text-blue-600" />
-              Sales Trend
+              Tendencia de Ventas
             </h3>
             <ResponsiveContainer width="100%" height={300}>
               <LineChart data={salesData}>
@@ -500,7 +500,7 @@ export function ReportsManager() {
                 <Tooltip 
                   formatter={(value: any, name: string) => [
                     name === 'sales' ? `${state.settings.currency} ${Number(value).toFixed(2)}` : value,
-                    name === 'sales' ? 'Sales' : 'Transactions'
+                    name === 'sales' ? 'Ventas' : 'Transacciones'
                   ]}
                   contentStyle={{
                     backgroundColor: 'white',
@@ -515,7 +515,7 @@ export function ReportsManager() {
                   dataKey="sales" 
                   stroke="#2563EB" 
                   strokeWidth={3} 
-                  name="Sales"
+                  name="Ventas"
                   dot={{ fill: '#2563EB', strokeWidth: 2, r: 4 }}
                   activeDot={{ r: 6, stroke: '#2563EB', strokeWidth: 2 }}
                 />
@@ -524,7 +524,7 @@ export function ReportsManager() {
                   dataKey="transactions" 
                   stroke="#059669" 
                   strokeWidth={3} 
-                  name="Transactions"
+                  name="Transacciones"
                   dot={{ fill: '#059669', strokeWidth: 2, r: 4 }}
                   activeDot={{ r: 6, stroke: '#059669', strokeWidth: 2 }}
                 />
@@ -536,7 +536,7 @@ export function ReportsManager() {
           <div className="card p-6">
             <h3 className="text-lg font-bold text-gray-900 mb-6 flex items-center">
               <BarChart3 className="h-5 w-5 mr-2 text-purple-600" />
-              Sales by Category
+              Ventas por Categoría
             </h3>
             <ResponsiveContainer width="100%" height={300}>
               <PieChart>
@@ -555,7 +555,7 @@ export function ReportsManager() {
                   ))}
                 </Pie>
                 <Tooltip 
-                  formatter={(value: any) => [`${state.settings.currency} ${Number(value).toFixed(2)}`, 'Revenue']}
+                  formatter={(value: any) => [`${state.settings.currency} ${Number(value).toFixed(2)}`, 'Ingresos']}
                   contentStyle={{
                     backgroundColor: 'white',
                     border: '1px solid #e5e7eb',
@@ -575,7 +575,7 @@ export function ReportsManager() {
           <div className="card p-6">
             <h3 className="text-lg font-bold text-gray-900 mb-6 flex items-center">
               <TrendingUp className="h-5 w-5 mr-2 text-blue-600" />
-              Top Customer Spending
+              Top Clientes por Consumo
             </h3>
             <ResponsiveContainer width="100%" height={300}>
               <LineChart data={customerData.slice(0, 10).map(customer => ({
@@ -589,7 +589,7 @@ export function ReportsManager() {
                 <Tooltip 
                   formatter={(value: any, name: string) => [
                     name === 'spending' ? `${state.settings.currency} ${Number(value).toFixed(2)}` : value,
-                    name === 'spending' ? 'Total Spent' : 'Transactions'
+                    name === 'spending' ? 'Total Gastado' : 'Transacciones'
                   ]}
                   contentStyle={{
                     backgroundColor: 'white',
@@ -604,7 +604,7 @@ export function ReportsManager() {
                   dataKey="spending" 
                   stroke="#2563EB" 
                   strokeWidth={3} 
-                  name="Total Spent"
+                  name="Total Gastado"
                   dot={{ fill: '#2563EB', strokeWidth: 2, r: 4 }}
                   activeDot={{ r: 6, stroke: '#2563EB', strokeWidth: 2 }}
                 />
@@ -620,15 +620,15 @@ export function ReportsManager() {
           <div className="card p-6">
             <h3 className="text-lg font-bold text-gray-900 mb-6 flex items-center">
               <BarChart3 className="h-5 w-5 mr-2 text-purple-600" />
-              Stock Status Distribution
+              Distribución de Estados de Stock
             </h3>
             <ResponsiveContainer width="100%" height={300}>
               <PieChart>
                 <Pie
                   data={[
-                    { name: 'In Stock', value: inventoryData.filter(item => item.stockStatus === 'In Stock').length },
-                    { name: 'Low Stock', value: inventoryData.filter(item => item.stockStatus === 'Low Stock').length },
-                    { name: 'Out of Stock', value: inventoryData.filter(item => item.stockStatus === 'Out of Stock').length }
+                    { name: 'En Stock', value: inventoryData.filter(item => item.stockStatus === 'In Stock').length },
+                    { name: 'Stock Bajo', value: inventoryData.filter(item => item.stockStatus === 'Low Stock').length },
+                    { name: 'Agotado', value: inventoryData.filter(item => item.stockStatus === 'Out of Stock').length }
                   ]}
                   cx="50%"
                   cy="50%"
@@ -643,7 +643,7 @@ export function ReportsManager() {
                   <Cell fill="#DC2626" />
                 </Pie>
                 <Tooltip 
-                  formatter={(value: any) => [value, 'Products']}
+                  formatter={(value: any) => [value, 'Productos']}
                   contentStyle={{
                     backgroundColor: 'white',
                     border: '1px solid #e5e7eb',
@@ -659,7 +659,7 @@ export function ReportsManager() {
           <div className="card p-6">
             <h3 className="text-lg font-bold text-gray-900 mb-6 flex items-center">
               <DollarSign className="h-5 w-5 mr-2 text-green-600" />
-              Stock Value by Category
+              Valor del Inventario por Categoría
             </h3>
             <ResponsiveContainer width="100%" height={300}>
               <PieChart>
@@ -683,7 +683,7 @@ export function ReportsManager() {
                   ))}
                 </Pie>
                 <Tooltip 
-                  formatter={(value: any) => [`${state.settings.currency} ${Number(value).toFixed(2)}`, 'Stock Value']}
+                  formatter={(value: any) => [`${state.settings.currency} ${Number(value).toFixed(2)}`, 'Valor de Stock']}
                   contentStyle={{
                     backgroundColor: 'white',
                     border: '1px solid #e5e7eb',
@@ -703,18 +703,18 @@ export function ReportsManager() {
           <div className="px-6 py-4 border-b border-gray-100">
             <h3 className="text-lg font-bold text-gray-900 flex items-center">
               <ShoppingCart className="h-5 w-5 mr-2 text-green-600" />
-              Top Selling Products
+              Productos Más Vendidos
             </h3>
           </div>
           <div className="overflow-x-auto">
             <table className="table">
               <thead className="table-header">
                 <tr>
-                  <th className="table-header-cell">Rank</th>
-                  <th className="table-header-cell">Product</th>
-                  <th className="table-header-cell">Quantity Sold</th>
-                  <th className="table-header-cell">Revenue</th>
-                  <th className="table-header-cell">Avg. Price</th>
+                  <th className="table-header-cell">Puesto</th>
+                  <th className="table-header-cell">Producto</th>
+                  <th className="table-header-cell">Cantidad Vendida</th>
+                  <th className="table-header-cell">Ingresos</th>
+                  <th className="table-header-cell">Precio Promedio</th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
@@ -750,19 +750,19 @@ export function ReportsManager() {
           <div className="px-6 py-4 border-b border-gray-100">
             <h3 className="text-lg font-bold text-gray-900 flex items-center">
               <Users className="h-5 w-5 mr-2 text-blue-600" />
-              Customer Analytics
+              Estadísticas de Clientes
             </h3>
           </div>
           <div className="overflow-x-auto">
             <table className="table">
               <thead className="table-header">
                 <tr>
-                  <th className="table-header-cell">Customer</th>
-                  <th className="table-header-cell">Total Spent</th>
-                  <th className="table-header-cell">Transactions</th>
-                  <th className="table-header-cell">Items Purchased</th>
-                  <th className="table-header-cell">Avg. Transaction</th>
-                  <th className="table-header-cell">Last Purchase</th>
+                  <th className="table-header-cell">Cliente</th>
+                  <th className="table-header-cell">Total Gastado</th>
+                  <th className="table-header-cell">Transacciones</th>
+                  <th className="table-header-cell">Artículos Comprados</th>
+                  <th className="table-header-cell">Ticket Promedio</th>
+                  <th className="table-header-cell">Última Compra</th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
@@ -789,7 +789,7 @@ export function ReportsManager() {
                       {state.settings.currency} {customer.avgTransactionValue.toFixed(2)}
                     </td>
                     <td className="table-cell text-gray-600">
-                      {format(customer.lastPurchase, 'MMM dd, yyyy')}
+                      {format(customer.lastPurchase, 'dd/MM/yyyy')}
                     </td>
                   </tr>
                 ))}
@@ -804,23 +804,23 @@ export function ReportsManager() {
           <div className="px-6 py-4 border-b border-gray-100">
             <h3 className="text-lg font-bold text-gray-900 flex items-center">
               <BarChart3 className="h-5 w-5 mr-2 text-purple-600" />
-              Inventory Analytics
+              Estadísticas de Inventario
             </h3>
           </div>
           <div className="overflow-x-auto">
             <table className="table">
               <thead className="table-header">
                 <tr>
-                  <th className="table-header-cell">Product</th>
+                  <th className="table-header-cell">Producto</th>
                   <th className="table-header-cell">SKU</th>
-                  <th className="table-header-cell">Category</th>
+                  <th className="table-header-cell">Categoría</th>
                   <th className="table-header-cell">Stock</th>
-                  <th className="table-header-cell">Status</th>
-                  <th className="table-header-cell">Stock Value</th>
-                  <th className="table-header-cell">Sold</th>
-                  <th className="table-header-cell">Revenue</th>
-                  <th className="table-header-cell">Turnover</th>
-                  <th className="table-header-cell">Margin</th>
+                  <th className="table-header-cell">Estado</th>
+                  <th className="table-header-cell">Valor de Stock</th>
+                  <th className="table-header-cell">Vendidos</th>
+                  <th className="table-header-cell">Ingresos</th>
+                  <th className="table-header-cell">Rotación</th>
+                  <th className="table-header-cell">Margen</th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
@@ -829,7 +829,7 @@ export function ReportsManager() {
                     <td className="table-cell">
                       <div className="flex items-center">
                         <span className="font-semibold text-gray-900">{item.name}</span>
-                        {!item.active && <span className="ml-2 badge badge-error text-xs">Inactive</span>}
+                        {!item.active && <span className="ml-2 badge badge-error text-xs">Inactivo</span>}
                       </div>
                     </td>
                     <td className="table-cell font-mono text-sm text-gray-600">{item.sku}</td>
@@ -848,7 +848,7 @@ export function ReportsManager() {
                         item.stockStatus === 'Low Stock' ? 'badge-warning' :
                         'badge-success'
                       }`}>
-                        {item.stockStatus}
+                        {item.stockStatus === 'Out of Stock' ? 'Agotado' : item.stockStatus === 'Low Stock' ? 'Stock Bajo' : 'En Stock'}
                       </span>
                     </td>
                     <td className="table-cell font-semibold text-blue-600">

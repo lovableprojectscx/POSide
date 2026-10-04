@@ -47,7 +47,7 @@ export function CustomerDetailModal({ customer, onClose }: CustomerDetailModalPr
               </div>
               <div>
                 <h2 className="text-2xl font-bold">{customer.name}</h2>
-                <p className="text-blue-100">Customer ID: {customer.id}</p>
+                <p className="text-blue-100">ID de Cliente: {customer.id}</p>
               </div>
             </div>
             <button
@@ -61,8 +61,8 @@ export function CustomerDetailModal({ customer, onClose }: CustomerDetailModalPr
           {/* Tab Navigation */}
           <div className="flex space-x-1 mt-6">
             {[
-              { id: 'details', label: 'Customer Details', icon: User },
-              { id: 'transactions', label: 'Transaction History', icon: Receipt },
+              { id: 'details', label: 'Detalles del Cliente', icon: User },
+              { id: 'transactions', label: 'Historial de Transacciones', icon: Receipt },
             ].map((tab) => (
               <button
                 key={tab.id}
@@ -89,7 +89,7 @@ export function CustomerDetailModal({ customer, onClose }: CustomerDetailModalPr
                 <div className="bg-gradient-to-r from-green-500 to-green-600 p-6 rounded-2xl text-white">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-green-100 text-sm font-medium">Total Spent</p>
+                      <p className="text-green-100 text-sm font-medium">Gasto Total</p>
                       <p className="text-2xl font-bold">{state.settings.currency} {totalSpent.toFixed(2)}</p>
                     </div>
                     <ShoppingBag className="h-8 w-8 text-green-200" />
@@ -99,7 +99,7 @@ export function CustomerDetailModal({ customer, onClose }: CustomerDetailModalPr
                 <div className="bg-gradient-to-r from-blue-500 to-blue-600 p-6 rounded-2xl text-white">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-blue-100 text-sm font-medium">Transactions</p>
+                      <p className="text-blue-100 text-sm font-medium">Transacciones</p>
                       <p className="text-2xl font-bold">{totalTransactions}</p>
                     </div>
                     <Receipt className="h-8 w-8 text-blue-200" />
@@ -109,7 +109,7 @@ export function CustomerDetailModal({ customer, onClose }: CustomerDetailModalPr
                 <div className="bg-gradient-to-r from-purple-500 to-purple-600 p-6 rounded-2xl text-white">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-purple-100 text-sm font-medium">Avg. Transaction</p>
+                      <p className="text-purple-100 text-sm font-medium">Ticket Promedio</p>
                       <p className="text-2xl font-bold">{state.settings.currency} {averageTransaction.toFixed(2)}</p>
                     </div>
                     <CreditCard className="h-8 w-8 text-purple-200" />
@@ -119,7 +119,7 @@ export function CustomerDetailModal({ customer, onClose }: CustomerDetailModalPr
                 <div className="bg-gradient-to-r from-orange-500 to-orange-600 p-6 rounded-2xl text-white">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-orange-100 text-sm font-medium">Credit Available</p>
+                      <p className="text-orange-100 text-sm font-medium">Crédito Disponible</p>
                       <p className="text-2xl font-bold">{state.settings.currency} {creditAvailable.toFixed(2)}</p>
                     </div>
                     <CreditCard className="h-8 w-8 text-orange-200" />
@@ -130,26 +130,26 @@ export function CustomerDetailModal({ customer, onClose }: CustomerDetailModalPr
               {/* Customer Information */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <div className="bg-gray-50 rounded-2xl p-6">
-                  <h3 className="text-lg font-bold text-gray-900 mb-6">Contact Information</h3>
+                  <h3 className="text-lg font-bold text-gray-900 mb-6">Información de Contacto</h3>
                   <div className="space-y-4">
                     <div className="flex items-center space-x-3">
                       <Mail className="h-5 w-5 text-gray-400" />
                       <div>
-                        <p className="text-sm font-medium text-gray-600">Email</p>
+                        <p className="text-sm font-medium text-gray-600">Correo Electrónico</p>
                         <p className="text-gray-900">{customer.email}</p>
                       </div>
                     </div>
                     <div className="flex items-center space-x-3">
                       <Phone className="h-5 w-5 text-gray-400" />
                       <div>
-                        <p className="text-sm font-medium text-gray-600">Phone</p>
+                        <p className="text-sm font-medium text-gray-600">Teléfono</p>
                         <p className="text-gray-900">{customer.phone}</p>
                       </div>
                     </div>
                     <div className="flex items-start space-x-3">
                       <MapPin className="h-5 w-5 text-gray-400 mt-1" />
                       <div>
-                        <p className="text-sm font-medium text-gray-600">Address</p>
+                        <p className="text-sm font-medium text-gray-600">Dirección</p>
                         <p className="text-gray-900">{customer.address}</p>
                       </div>
                     </div>
@@ -157,12 +157,12 @@ export function CustomerDetailModal({ customer, onClose }: CustomerDetailModalPr
                 </div>
 
                 <div className="bg-gray-50 rounded-2xl p-6">
-                  <h3 className="text-lg font-bold text-gray-900 mb-6">Account Information</h3>
+                  <h3 className="text-lg font-bold text-gray-900 mb-6">Información de la Cuenta</h3>
                   <div className="space-y-4">
                     <div className="flex items-center space-x-3">
                       <CreditCard className="h-5 w-5 text-gray-400" />
                       <div>
-                        <p className="text-sm font-medium text-gray-600">Price Tier</p>
+                        <p className="text-sm font-medium text-gray-600">Nivel de Precio</p>
                         <span className="inline-flex px-3 py-1 text-sm font-semibold rounded-full bg-blue-100 text-blue-800">
                           {customer.priceTier}
                         </span>
@@ -171,18 +171,18 @@ export function CustomerDetailModal({ customer, onClose }: CustomerDetailModalPr
                     <div className="flex items-center space-x-3">
                       <Calendar className="h-5 w-5 text-gray-400" />
                       <div>
-                        <p className="text-sm font-medium text-gray-600">Member Since</p>
-                        <p className="text-gray-900">{format(new Date(customer.createdAt), 'MMM dd, yyyy')}</p>
+                        <p className="text-sm font-medium text-gray-600">Miembro Desde</p>
+                        <p className="text-gray-900">{format(new Date(customer.createdAt), 'dd/MM/yyyy')}</p>
                       </div>
                     </div>
                     <div className="flex items-center space-x-3">
                       <Calendar className="h-5 w-5 text-gray-400" />
                       <div>
-                        <p className="text-sm font-medium text-gray-600">Last Purchase</p>
+                        <p className="text-sm font-medium text-gray-600">Última Compra</p>
                         <p className="text-gray-900">
                           {customer.lastPurchase 
-                            ? format(new Date(customer.lastPurchase), 'MMM dd, yyyy')
-                            : 'Never'
+                            ? format(new Date(customer.lastPurchase), 'dd/MM/yyyy')
+                            : 'Nunca'
                           }
                         </p>
                       </div>
@@ -193,27 +193,27 @@ export function CustomerDetailModal({ customer, onClose }: CustomerDetailModalPr
 
               {/* Credit Information */}
               <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-6 border border-blue-200">
-                <h3 className="text-lg font-bold text-gray-900 mb-4">Credit Information</h3>
+                <h3 className="text-lg font-bold text-gray-900 mb-4">Información de Crédito</h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <div>
-                    <p className="text-sm font-medium text-gray-600">Credit Limit</p>
+                    <p className="text-sm font-medium text-gray-600">Límite de Crédito</p>
                     <p className="text-xl font-bold text-gray-900">{state.settings.currency} {customer.creditLimit.toFixed(2)}</p>
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-gray-600">Credit Used</p>
+                    <p className="text-sm font-medium text-gray-600">Crédito Usado</p>
                     <p className="text-xl font-bold text-red-600">{state.settings.currency} {customer.creditUsed.toFixed(2)}</p>
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-gray-600">Available Credit</p>
+                    <p className="text-sm font-medium text-gray-600">Crédito Disponible</p>
                     <p className="text-xl font-bold text-green-600">{state.settings.currency} {creditAvailable.toFixed(2)}</p>
                   </div>
                 </div>
                 <div className="mt-4">
                   <div className="bg-white rounded-xl p-2">
-                    <div className="bg-blue-500 h-3 rounded-lg" style={{ width: `${(customer.creditUsed / customer.creditLimit) * 100}%` }}></div>
+                    <div className="bg-blue-500 h-3 rounded-lg" style={{ width: `${customer.creditLimit > 0 ? (customer.creditUsed / customer.creditLimit) * 100 : 0}%` }}></div>
                   </div>
                   <p className="text-xs text-gray-600 mt-2">
-                    {((customer.creditUsed / customer.creditLimit) * 100).toFixed(1)}% of credit limit used
+                    {customer.creditLimit > 0 ? ((customer.creditUsed / customer.creditLimit) * 100).toFixed(1) : 0}% del límite de crédito utilizado
                   </p>
                 </div>
               </div>
@@ -223,14 +223,14 @@ export function CustomerDetailModal({ customer, onClose }: CustomerDetailModalPr
           {activeTab === 'transactions' && (
             <div className="space-y-6">
               <div className="flex items-center justify-between">
-                <h3 className="text-xl font-bold text-gray-900">Transaction History</h3>
-                <p className="text-gray-600">{totalTransactions} transactions</p>
+                <h3 className="text-xl font-bold text-gray-900">Historial de Transacciones</h3>
+                <p className="text-gray-600">{totalTransactions} transacciones</p>
               </div>
 
               {customerTransactions.length === 0 ? (
                 <div className="text-center py-12">
                   <Receipt className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-                  <p className="text-gray-500 text-lg">No transactions found</p>
+                  <p className="text-gray-500 text-lg">No se encontraron transacciones</p>
                 </div>
               ) : (
                 <div className="space-y-4">
@@ -240,7 +240,7 @@ export function CustomerDetailModal({ customer, onClose }: CustomerDetailModalPr
                         <div>
                           <h4 className="font-bold text-gray-900">#{transaction.receiptNumber}</h4>
                           <p className="text-sm text-gray-600">
-                            {format(new Date(transaction.timestamp), 'MMM dd, yyyy HH:mm')}
+                            {format(new Date(transaction.timestamp), 'dd/MM/yyyy HH:mm')}
                           </p>
                         </div>
                         <div className="text-right">
@@ -248,29 +248,31 @@ export function CustomerDetailModal({ customer, onClose }: CustomerDetailModalPr
                             {state.settings.currency} {transaction.total.toFixed(2)}
                           </p>
                           <span className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full ${getStatusColor(transaction.status)}`}>
-                            {transaction.status}
+                            {transaction.status === 'completed' ? 'Completada' : transaction.status === 'pending' ? 'Pendiente' : transaction.status === 'refunded' ? 'Reembolsada' : transaction.status === 'credit' ? 'A Crédito' : transaction.status}
                           </span>
                         </div>
                       </div>
 
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
                         <div>
-                          <p className="text-gray-600">Items</p>
-                          <p className="font-medium">{transaction.items.length} items</p>
+                          <p className="text-gray-600">Artículos</p>
+                          <p className="font-medium">{transaction.items.length} artículos</p>
                         </div>
                         <div>
-                          <p className="text-gray-600">Payment Method</p>
-                          <p className="font-medium capitalize">{transaction.paymentMethod}</p>
+                          <p className="text-gray-600">Método de Pago</p>
+                          <p className="font-medium capitalize">
+                            {transaction.paymentMethod === 'cash' ? 'Efectivo' : transaction.paymentMethod === 'card' ? 'Tarjeta' : transaction.paymentMethod === 'credit' ? 'Crédito' : transaction.paymentMethod === 'digital' ? 'Digital' : transaction.paymentMethod}
+                          </p>
                         </div>
                         <div>
-                          <p className="text-gray-600">Cashier</p>
+                          <p className="text-gray-600">Cajero</p>
                           <p className="font-medium">{transaction.cashier}</p>
                         </div>
                       </div>
 
                       {transaction.items.length > 0 && (
                         <div className="mt-4 pt-4 border-t border-gray-200">
-                          <p className="text-sm font-medium text-gray-600 mb-2">Items:</p>
+                          <p className="text-sm font-medium text-gray-600 mb-2">Artículos:</p>
                           <div className="space-y-1">
                             {transaction.items.map((item, index) => (
                               <div key={index} className="flex justify-between text-sm">

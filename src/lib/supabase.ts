@@ -1,15 +1,30 @@
 import { createClient } from '@supabase/supabase-js'
 import { Database } from './database.types'
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL!
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY!
-const supabaseServiceRoleKey = import.meta.env.VITE_SUPABASE_SERVICE_ROLE_KEY!
+const rawUrl = import.meta.env.VITE_SUPABASE_URL
+const rawAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
+const rawServiceRoleKey = import.meta.env.VITE_SUPABASE_SERVICE_ROLE_KEY
+
+// Determines if valid Supabase credentials have been configured
+export const isSupabaseConfigured: boolean = Boolean(
+  rawUrl &&
+  rawAnonKey &&
+  typeof rawUrl === 'string' &&
+  rawUrl.startsWith('http') &&
+  !rawUrl.includes('your_supabase') &&
+  !rawUrl.includes('placeholder')
+);
+
+// Fallbacks prevent createClient from crashing if .env is missing or incomplete
+const supabaseUrl = isSupabaseConfigured ? rawUrl! : 'https://mock-supabase.local'
+const supabaseAnonKey = isSupabaseConfigured ? rawAnonKey! : 'mock-anon-key'
+const supabaseServiceRoleKey = isSupabaseConfigured ? (rawServiceRoleKey || rawAnonKey)! : 'mock-service-key'
 
 export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
   auth: {
-    autoRefreshToken: true,
-    persistSession: true,
-    detectSessionInUrl: true
+    autoRefreshToken: isSupabaseConfigured,
+    persistSession: isSupabaseConfigured,
+    detectSessionInUrl: isSupabaseConfigured
   }
 })
 

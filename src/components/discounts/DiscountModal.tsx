@@ -70,17 +70,17 @@ export function DiscountModal({ isOpen, onClose, discount }: DiscountModalProps)
   const handleSubmit = async () => {
     // Validate required fields
     if (!formData.name.trim()) {
-      swalConfig.warning('Please enter a discount name');
+      swalConfig.warning('Por favor ingresa un nombre para el descuento');
       return;
     }
 
     if (formData.type !== 'free_gift' && (!formData.value || parseFloat(formData.value) <= 0)) {
-      swalConfig.warning('Please enter a valid discount value');
+      swalConfig.warning('Por favor ingresa un valor de descuento válido');
       return;
     }
 
     if (!formData.validFrom || !formData.validTo) {
-      swalConfig.warning('Please select valid dates');
+      swalConfig.warning('Por favor selecciona fechas válidas');
       return;
     }
 
@@ -88,11 +88,11 @@ export function DiscountModal({ isOpen, onClose, discount }: DiscountModalProps)
     const specificProductsConditions = conditions.filter(c => c.type === 'specific_products');
     for (const condition of specificProductsConditions) {
       if (!condition.value || (Array.isArray(condition.value) && condition.value.length === 0)) {
-        swalConfig.warning('Please select at least one product for specific products conditions');
+        swalConfig.warning('Por favor selecciona al menos un producto para la condición');
         return;
       }
       if (!condition.minQuantity || condition.minQuantity < 1) {
-        swalConfig.warning('Minimum quantity must be at least 1 for specific products conditions');
+        swalConfig.warning('La cantidad mínima debe ser al menos 1 para productos específicos');
         return;
       }
     }
@@ -103,15 +103,15 @@ export function DiscountModal({ isOpen, onClose, discount }: DiscountModalProps)
     const paymentMethodCondition = conditions.find(c => c.type === 'payment_method');
     
     if ((hasCardTypeCondition || hasBankNameCondition) && paymentMethodCondition && paymentMethodCondition.value !== 'card') {
-      swalConfig.warning('Card Type and Bank Name conditions can only be used with Card payment method. Please remove the conflicting payment method condition or change it to "Card".');
+      swalConfig.warning('Las condiciones de Tipo de Tarjeta y Banco solo aplican con método de pago Tarjeta.');
       return;
     }
 
     if ((hasCardTypeCondition || hasBankNameCondition) && !paymentMethodCondition) {
       const result = await swalConfig.confirm(
-        'Card Payment Condition Warning',
-        'You have Card Type or Bank Name conditions but no Payment Method condition. These conditions will only apply when customers pay with cards. Do you want to continue?',
-        'Continue'
+        'Advertencia de Pago con Tarjeta',
+        'Tienes condiciones de Tarjeta o Banco sin condición de método de pago. ¿Deseas continuar?',
+        'Continuar'
       );
       if (!result.isConfirmed) return;
     }
@@ -134,23 +134,23 @@ export function DiscountModal({ isOpen, onClose, discount }: DiscountModalProps)
     };
 
     try {
-      swalConfig.loading(`${discount ? 'Updating' : 'Creating'} discount...`);
+      swalConfig.loading(`${discount ? 'Actualizando' : 'Creando'} descuento...`);
       const { discountsService } = await import('../../lib/services');
       
       if (discount) {
         await discountsService.update(discount.id, discountData);
         dispatch({ type: 'UPDATE_DISCOUNT', payload: discountData });
-        swalConfig.success('Discount updated successfully!');
+        swalConfig.success('¡Descuento actualizado correctamente!');
       } else {
         const newDiscount = await discountsService.create(discountData);
         dispatch({ type: 'ADD_DISCOUNT', payload: newDiscount });
-        swalConfig.success('Discount created successfully!');
+        swalConfig.success('¡Descuento creado correctamente!');
       }
       
       onClose();
     } catch (error) {
       console.error('Error saving discount:', error);
-      swalConfig.error('Failed to save discount. Please try again.');
+      swalConfig.error('Error al guardar el descuento. Intente nuevamente.');
     }
   };
 
@@ -206,7 +206,7 @@ export function DiscountModal({ isOpen, onClose, discount }: DiscountModalProps)
     );
   };
 
-  const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const dayNames = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
 
   // Helper function to check for card-specific conditions
   const getCardConditionWarning = () => {
@@ -218,17 +218,17 @@ export function DiscountModal({ isOpen, onClose, discount }: DiscountModalProps)
       if (paymentMethodCondition && paymentMethodCondition.value !== 'card') {
         return {
           type: 'error',
-          message: 'Conflicting conditions: Card Type/Bank Name conditions require Card payment method.'
+          message: 'Condiciones en conflicto: El Tipo de Tarjeta / Banco requiere método de pago Tarjeta.'
         };
       } else if (!paymentMethodCondition) {
         return {
           type: 'warning',
-          message: 'Card Type/Bank Name conditions will only apply when customers pay with cards.'
+          message: 'Las condiciones de Tipo de Tarjeta / Banco solo aplicarán cuando el cliente pague con tarjeta.'
         };
       } else if (paymentMethodCondition.value === 'card') {
         return {
           type: 'info',
-          message: 'Great! Card-specific conditions are properly configured with Card payment method.'
+          message: '¡Excelente! Las condiciones de tarjeta están configuradas correctamente con método de pago Tarjeta.'
         };
       }
     }
@@ -242,7 +242,7 @@ export function DiscountModal({ isOpen, onClose, discount }: DiscountModalProps)
       <div className="modal max-w-4xl">
         <div className="modal-header">
           <h2 className="text-xl font-bold text-gray-900">
-            {discount ? 'Edit Discount' : 'Add New Discount'}
+            {discount ? 'Editar Descuento' : 'Agregar Nuevo Descuento'}
           </h2>
           <button
             onClick={onClose}
@@ -255,11 +255,11 @@ export function DiscountModal({ isOpen, onClose, discount }: DiscountModalProps)
         <div className="modal-body space-y-6">
           {/* Basic Information */}
           <div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Basic Information</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Información Básica</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Discount Name *
+                  Nombre del Descuento *
                 </label>
                 <input
                   type="text"
@@ -268,13 +268,13 @@ export function DiscountModal({ isOpen, onClose, discount }: DiscountModalProps)
                   onChange={handleChange}
                   required
                   className="input"
-                  placeholder="Enter discount name"
+                  placeholder="Ej. Descuento de Fin de Semana"
                 />
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Discount Type *
+                  Tipo de Descuento *
                 </label>
                 <select
                   name="type"
@@ -282,16 +282,16 @@ export function DiscountModal({ isOpen, onClose, discount }: DiscountModalProps)
                   onChange={handleChange}
                   className="select"
                 >
-                  <option value="percentage">Percentage Discount</option>
-                  <option value="fixed">Fixed Amount Discount</option>
-                  <option value="free_gift">Free Gift</option>
+                  <option value="percentage">Descuento Porcentual</option>
+                  <option value="fixed">Descuento de Monto Fijo</option>
+                  <option value="free_gift">Regalo Gratis</option>
                 </select>
               </div>
             </div>
 
             <div className="mt-4">
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Description
+                Descripción
               </label>
               <textarea
                 name="description"
@@ -299,19 +299,19 @@ export function DiscountModal({ isOpen, onClose, discount }: DiscountModalProps)
                 onChange={handleChange}
                 rows={3}
                 className="textarea"
-                placeholder="Enter discount description"
+                placeholder="Descripción de la promoción u oferta"
               />
             </div>
           </div>
 
           {/* Discount Value */}
           <div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Discount Value</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Valor del Descuento</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {formData.type !== 'free_gift' && (
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    {formData.type === 'percentage' ? 'Percentage (%)' : `Amount (${state.settings.currency})`} *
+                    {formData.type === 'percentage' ? 'Porcentaje (%)' : `Monto (${state.settings.currency})`} *
                   </label>
                   <input
                     type="number"
@@ -329,7 +329,7 @@ export function DiscountModal({ isOpen, onClose, discount }: DiscountModalProps)
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Minimum Amount ({state.settings.currency})
+                  Monto Mínimo de Compra ({state.settings.currency})
                 </label>
                 <input
                   type="number"
@@ -346,7 +346,7 @@ export function DiscountModal({ isOpen, onClose, discount }: DiscountModalProps)
               {formData.type === 'percentage' && (
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Maximum Discount ({state.settings.currency})
+                    Descuento Máximo ({state.settings.currency})
                   </label>
                   <input
                     type="number"
@@ -356,7 +356,7 @@ export function DiscountModal({ isOpen, onClose, discount }: DiscountModalProps)
                     value={formData.maxDiscount}
                     onChange={handleChange}
                     className="input"
-                    placeholder="No limit"
+                    placeholder="Sin límite"
                   />
                 </div>
               )}
@@ -366,7 +366,7 @@ export function DiscountModal({ isOpen, onClose, discount }: DiscountModalProps)
           {/* Free Gift Products */}
           {formData.type === 'free_gift' && (
             <div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Free Gift Products</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Productos de Regalo</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 max-h-48 overflow-y-auto border border-gray-200 rounded-xl p-4">
                 {state.products.map(product => (
                   <label key={product.id} className="flex items-center space-x-3 p-3 border border-gray-200 rounded-xl hover:bg-gray-50 cursor-pointer transition-colors">
@@ -384,15 +384,15 @@ export function DiscountModal({ isOpen, onClose, discount }: DiscountModalProps)
                 ))}
               </div>
               {freeGiftProducts.length === 0 && (
-                <p className="text-sm text-gray-500 mt-2">Please select at least one product for free gift</p>
+                <p className="text-sm text-gray-500 mt-2">Por favor selecciona al menos un producto para el regalo</p>
               )}
             </div>
           )}
 
           {/* Valid Days */}
           <div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Valid Days (Optional)</h3>
-            <p className="text-sm text-gray-600 mb-3">Select specific days when this discount is valid. Leave empty for all days.</p>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Días Válidos (Opcional)</h3>
+            <p className="text-sm text-gray-600 mb-3">Selecciona días específicos en los que aplica este descuento. Deja vacío para todos los días.</p>
             <div className="grid grid-cols-7 gap-2">
               {dayNames.map((day, index) => (
                 <button
@@ -413,8 +413,8 @@ export function DiscountModal({ isOpen, onClose, discount }: DiscountModalProps)
           <div>
             <div className="flex items-center justify-between mb-4">
               <div>
-                <h3 className="text-lg font-semibold text-gray-900">Additional Conditions</h3>
-                <p className="text-sm text-gray-600">Add specific conditions that must be met for this discount to apply</p>
+                <h3 className="text-lg font-semibold text-gray-900">Condiciones Adicionales</h3>
+                <p className="text-sm text-gray-600">Agrega condiciones específicas que deben cumplirse para aplicar este descuento</p>
               </div>
               <button
                 type="button"
@@ -422,7 +422,7 @@ export function DiscountModal({ isOpen, onClose, discount }: DiscountModalProps)
                 className="btn btn-primary btn-sm"
               >
                 <Plus className="h-4 w-4" />
-                Add Condition
+                Agregar Condición
               </button>
             </div>
 
@@ -458,31 +458,31 @@ export function DiscountModal({ isOpen, onClose, discount }: DiscountModalProps)
                     <div className={`grid gap-4 ${condition.type === 'specific_products' ? 'grid-cols-1 md:grid-cols-4' : 'grid-cols-1 md:grid-cols-3'}`}>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Condition Type
+                          Tipo de Condición
                         </label>
                         <select
                           value={condition.type}
                           onChange={(e) => updateCondition(index, 'type', e.target.value)}
                           className="select"
                         >
-                          <option value="min_amount">Minimum Amount</option>
-                          <option value="specific_products">Specific Products</option>
-                          <option value="payment_method">Payment Method</option>
-                          <option value="customer_tier">Customer Tier</option>
-                          <option value="card_type">Card Type (Card Payments)</option>
-                          <option value="bank_name">Bank Name (Card Payments)</option>
+                          <option value="min_amount">Monto Mínimo</option>
+                          <option value="specific_products">Productos Específicos</option>
+                          <option value="payment_method">Método de Pago</option>
+                          <option value="customer_tier">Nivel de Cliente</option>
+                          <option value="card_type">Tipo de Tarjeta (Pagos con Tarjeta)</option>
+                          <option value="bank_name">Banco Emisor (Pagos con Tarjeta)</option>
                         </select>
                       </div>
 
                       <div className={condition.type === 'specific_products' ? 'md:col-span-2' : ''}>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          {condition.type === 'specific_products' ? 'Products & Minimum Quantity' : 'Value'}
+                          {condition.type === 'specific_products' ? 'Productos y Cantidad Mínima' : 'Valor'}
                         </label>
                         {condition.type === 'specific_products' ? (
                           <div className="space-y-3">
                             <div className="border border-gray-200 rounded-lg p-3 bg-gray-50">
                               <label className="block text-xs font-medium text-gray-700 mb-2">
-                                Select Products
+                                Seleccionar Productos
                               </label>
                               <select
                                 multiple
@@ -503,7 +503,7 @@ export function DiscountModal({ isOpen, onClose, discount }: DiscountModalProps)
                             </div>
                             <div className="mt-3">
                               <label className="block text-xs font-medium text-gray-700 mb-1">
-                                Minimum Quantity Required
+                                Cantidad Mínima Requerida
                               </label>
                               <input
                                 type="number"
@@ -515,10 +515,10 @@ export function DiscountModal({ isOpen, onClose, discount }: DiscountModalProps)
                               />
                             </div>
                             <p className="text-xs text-blue-600 mt-2">
-                              💡 Customer must purchase at least {condition.minQuantity || 1} of any selected product(s)
+                              💡 El cliente debe comprar al menos {condition.minQuantity || 1} de cualquiera de los productos seleccionados
                               {condition.value && Array.isArray(condition.value) && condition.value.length > 0 && (
                                 <span className="block mt-1 text-gray-600">
-                                  Example: Buy {condition.minQuantity || 1} or more from: {condition.value.map((productId: string) => {
+                                  Ejemplo: Compre {condition.minQuantity || 1} o más de: {condition.value.map((productId: string) => {
                                     const product = state.products.find(p => p.id === productId);
                                     return product?.name;
                                   }).filter(Boolean).join(', ')}
@@ -532,11 +532,11 @@ export function DiscountModal({ isOpen, onClose, discount }: DiscountModalProps)
                             onChange={(e) => updateCondition(index, 'value', e.target.value)}
                             className="select"
                           >
-                            <option value="">Select Payment Method</option>
-                            <option value="cash">Cash</option>
-                            <option value="card">Card</option>
+                            <option value="">Selecciona Método de Pago</option>
+                            <option value="cash">Efectivo</option>
+                            <option value="card">Tarjeta</option>
                             <option value="digital">Digital</option>
-                            <option value="credit">Credit</option>
+                            <option value="credit">Crédito</option>
                           </select>
                         ) : condition.type === 'customer_tier' ? (
                           <select
@@ -544,11 +544,11 @@ export function DiscountModal({ isOpen, onClose, discount }: DiscountModalProps)
                             onChange={(e) => updateCondition(index, 'value', e.target.value)}
                             className="select"
                           >
-                            <option value="">Select Tier</option>
-                            <option value="Standard">Standard</option>
+                            <option value="">Selecciona Nivel</option>
+                            <option value="Standard">Estándar</option>
                             <option value="Premium">Premium</option>
                             <option value="VIP">VIP</option>
-                            <option value="Wholesale">Wholesale</option>
+                            <option value="Wholesale">Mayorista</option>
                           </select>
                         ) : condition.type === 'card_type' ? (
                           <div>
@@ -557,14 +557,14 @@ export function DiscountModal({ isOpen, onClose, discount }: DiscountModalProps)
                               onChange={(e) => updateCondition(index, 'value', e.target.value)}
                               className="select"
                             >
-                              <option value="">Select Card Type</option>
+                              <option value="">Selecciona Tipo de Tarjeta</option>
                               <option value="visa">Visa</option>
                               <option value="mastercard">Mastercard</option>
                               <option value="amex">American Express</option>
                               <option value="discover">Discover</option>
                             </select>
                             <p className="text-xs text-blue-600 mt-1">
-                              💡 This condition only applies when payment method is 'Card'
+                              💡 Esta condición solo aplica cuando el método de pago es 'Tarjeta'
                             </p>
                           </div>
                         ) : condition.type === 'bank_name' ? (
@@ -574,7 +574,7 @@ export function DiscountModal({ isOpen, onClose, discount }: DiscountModalProps)
                               onChange={(e) => updateCondition(index, 'value', e.target.value)}
                               className="select"
                             >
-                              <option value="">Select Bank</option>
+                              <option value="">Selecciona Banco</option>
                               <option value="Bank of Ceylon">Bank of Ceylon</option>
                               <option value="People's Bank">People's Bank</option>
                               <option value="Commercial Bank of Ceylon PLC">Commercial Bank of Ceylon PLC</option>
@@ -597,7 +597,7 @@ export function DiscountModal({ isOpen, onClose, discount }: DiscountModalProps)
                               <option value="ICBC">ICBC</option>
                             </select>
                             <p className="text-xs text-blue-600 mt-1">
-                              💡 This condition only applies when payment method is 'Card'
+                              💡 Esta condición solo aplica cuando el método de pago es 'Tarjeta'
                             </p>
                           </div>
                         ) : (
@@ -608,7 +608,7 @@ export function DiscountModal({ isOpen, onClose, discount }: DiscountModalProps)
                             value={condition.value}
                             onChange={(e) => updateCondition(index, 'value', e.target.value)}
                             className="input"
-                            placeholder="Enter value"
+                            placeholder="Ingresa valor"
                           />
                         )}
                       </div>
@@ -620,7 +620,7 @@ export function DiscountModal({ isOpen, onClose, discount }: DiscountModalProps)
                           className="btn btn-danger btn-sm w-full"
                         >
                           <Trash2 className="h-4 w-4" />
-                          Remove
+                          Eliminar
                         </button>
                       </div>
                     </div>
@@ -632,11 +632,11 @@ export function DiscountModal({ isOpen, onClose, discount }: DiscountModalProps)
 
           {/* Validity Period */}
           <div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Validity Period</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Período de Validez</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Valid From *
+                  Válido Desde *
                 </label>
                 <input
                   type="date"
@@ -650,7 +650,7 @@ export function DiscountModal({ isOpen, onClose, discount }: DiscountModalProps)
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Valid To *
+                  Válido Hasta *
                 </label>
                 <input
                   type="date"
@@ -675,8 +675,8 @@ export function DiscountModal({ isOpen, onClose, discount }: DiscountModalProps)
                 className="rounded border-gray-300 text-blue-600 focus:ring-blue-500 h-5 w-5"
               />
               <div>
-                <span className="text-sm font-medium text-gray-700">Active</span>
-                <p className="text-xs text-gray-500">Enable this discount to be automatically applied</p>
+                <span className="text-sm font-medium text-gray-700">Activo</span>
+                <p className="text-xs text-gray-500">Habilitar este descuento para que se aplique automáticamente</p>
               </div>
             </label>
           </div>
@@ -697,14 +697,14 @@ export function DiscountModal({ isOpen, onClose, discount }: DiscountModalProps)
             onClick={onClose}
             className="btn btn-secondary btn-md"
           >
-            Cancel
+            Cancelar
           </button>
           <button
             type="button"
             onClick={handleSubmit}
             className="btn btn-primary btn-md"
           >
-            {discount ? 'Update Discount' : 'Add Discount'}
+            {discount ? 'Actualizar Descuento' : 'Guardar Descuento'}
           </button>
         </div>
       </div>

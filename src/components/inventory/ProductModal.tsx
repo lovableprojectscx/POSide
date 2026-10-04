@@ -84,30 +84,30 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
     // Validate required fields
     if (!formData.name.trim()) {
       await Swal.fire({
-        title: 'Error!',
-        text: 'Please enter a product name',
+        title: '¡Error!',
+        text: 'Por favor ingresa el nombre del producto',
         icon: 'error',
-        confirmButtonText: 'OK'
+        confirmButtonText: 'Aceptar'
       });
       return;
     }
 
     if (!formData.category.trim()) {
       await Swal.fire({
-        title: 'Error!',
-        text: 'Please enter a category',
+        title: '¡Error!',
+        text: 'Por favor ingresa una categoría',
         icon: 'error',
-        confirmButtonText: 'OK'
+        confirmButtonText: 'Aceptar'
       });
       return;
     }
 
     if (!formData.sku.trim()) {
       await Swal.fire({
-        title: 'Error!',
-        text: 'Please enter a SKU',
+        title: '¡Error!',
+        text: 'Por favor ingresa un código SKU',
         icon: 'error',
-        confirmButtonText: 'OK'
+        confirmButtonText: 'Aceptar'
       });
       return;
     }
@@ -115,20 +115,20 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
     if (formData.isWeightBased) {
       if (!formData.pricePerUnit || parseFloat(formData.pricePerUnit) <= 0) {
         await Swal.fire({
-          title: 'Error!',
-          text: 'Please enter a valid price per unit for weight-based product',
+          title: '¡Error!',
+          text: 'Por favor ingresa un precio por unidad válido para producto por peso',
           icon: 'error',
-          confirmButtonText: 'OK'
+          confirmButtonText: 'Aceptar'
         });
         return;
       }
     } else {
       if (!formData.price || parseFloat(formData.price) <= 0) {
         await Swal.fire({
-          title: 'Error!',
-          text: 'Please enter a valid price',
+          title: '¡Error!',
+          text: 'Por favor ingresa un precio de venta válido',
           icon: 'error',
-          confirmButtonText: 'OK'
+          confirmButtonText: 'Aceptar'
         });
         return;
       }
@@ -136,10 +136,10 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
 
     if (!formData.cost || parseFloat(formData.cost) < 0) {
       await Swal.fire({
-        title: 'Error!',
-        text: 'Please enter a valid cost price (or 0 if no cost)',
+        title: '¡Error!',
+        text: 'Por favor ingresa un precio de costo válido (o 0 si no aplica)',
         icon: 'error',
-        confirmButtonText: 'OK'
+        confirmButtonText: 'Aceptar'
       });
       return;
     }
@@ -148,20 +148,20 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
     if (formData.trackInventory) {
       if (!formData.stock || parseInt(formData.stock) < 0) {
         await Swal.fire({
-          title: 'Error!',
-          text: 'Please enter a valid stock quantity',
+          title: '¡Error!',
+          text: 'Por favor ingresa una cantidad de stock válida',
           icon: 'error',
-          confirmButtonText: 'OK'
+          confirmButtonText: 'Aceptar'
         });
         return;
       }
 
       if (!formData.minStock || parseInt(formData.minStock) < 0) {
         await Swal.fire({
-          title: 'Error!',
-          text: 'Please enter a valid minimum stock level',
+          title: '¡Error!',
+          text: 'Por favor ingresa un nivel mínimo de stock válido',
           icon: 'error',
-          confirmButtonText: 'OK'
+          confirmButtonText: 'Aceptar'
         });
         return;
       }
@@ -197,29 +197,29 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
         await productsService.update(productData.id, productData);
         dispatch({ type: 'UPDATE_PRODUCT', payload: productData });
         await Swal.fire({
-          title: 'Success!',
-          text: 'Product updated successfully',
+          title: '¡Éxito!',
+          text: 'Producto actualizado correctamente',
           icon: 'success',
-          confirmButtonText: 'OK'
+          confirmButtonText: 'Aceptar'
         });
       } else {
         const newProduct = await productsService.create(productData);
         dispatch({ type: 'ADD_PRODUCT', payload: newProduct });
         await Swal.fire({
-          title: 'Success!',
-          text: 'Product added successfully',
+          title: '¡Éxito!',
+          text: 'Producto agregado correctamente',
           icon: 'success',
-          confirmButtonText: 'OK'
+          confirmButtonText: 'Aceptar'
         });
       }
       onClose();
     } catch (error) {
       console.error('Error saving product:', error);
       await Swal.fire({
-        title: 'Error!',
-        text: 'Failed to save product. Please try again.',
+        title: '¡Error!',
+        text: 'Error al guardar el producto. Inténtalo de nuevo.',
         icon: 'error',
-        confirmButtonText: 'OK'
+        confirmButtonText: 'Aceptar'
       });
     }
   };
@@ -274,7 +274,7 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
       <div className="modal max-w-4xl">
         <div className="modal-header">
           <h2 className="text-xl font-bold text-gray-900">
-            {product ? 'Edit Product' : 'Add New Product'}
+            {product ? 'Editar Producto' : 'Agregar Nuevo Producto'}
           </h2>
           <button
             onClick={onClose}
@@ -286,11 +286,11 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
 
         <div className="modal-body space-y-6">
           <div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Basic Information</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Información Básica</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Product Name *
+                  Nombre del Producto *
                 </label>
                 <input
                   type="text"
@@ -299,13 +299,13 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
                   onChange={handleChange}
                   required
                   className="input"
-                  placeholder="Enter product name"
+                  placeholder="Ej. Café Espresso"
                 />
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Category *
+                  Categoría *
                 </label>
                 <input
                   type="text"
@@ -314,7 +314,7 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
                   onChange={handleChange}
                   required
                   className="input"
-                  placeholder="Enter category"
+                  placeholder="Ej. Bebidas"
                 />
               </div>
 
@@ -329,13 +329,13 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
                   onChange={handleChange}
                   required
                   className="input"
-                  placeholder="Enter SKU"
+                  placeholder="Ej. BEB-001"
                 />
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Barcode
+                  Código de Barras
                 </label>
                 <input
                   type="text"
@@ -343,13 +343,13 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
                   value={formData.barcode}
                   onChange={handleChange}
                   className="input"
-                  placeholder="Enter barcode"
+                  placeholder="Escanee o ingrese código"
                 />
               </div>
 
               <div className="md:col-span-2">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Description
+                  Descripción
                 </label>
                 <textarea
                   name="description"
@@ -357,14 +357,14 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
                   onChange={handleChange}
                   rows={3}
                   className="textarea"
-                  placeholder="Enter product description"
+                  placeholder="Descripción detallada del producto"
                 />
               </div>
             </div>
           </div>
 
           <div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Pricing & Stock</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Precios y Existencias</h3>
             
             <div className="mb-4">
               <label className="flex items-center space-x-3">
@@ -377,7 +377,7 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
                 />
                 <div className="flex items-center space-x-2">
                   <Scale className="h-4 w-4 text-gray-500" />
-                  <span className="text-sm font-medium text-gray-700">Weight-based pricing</span>
+                  <span className="text-sm font-medium text-gray-700">Precio basado en peso / granel</span>
                 </div>
               </label>
             </div>
@@ -387,7 +387,7 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
                 <>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Price per Unit *
+                      Precio por Unidad *
                     </label>
                     <input
                       type="number"
@@ -403,7 +403,7 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Unit *
+                      Unidad de Medida *
                     </label>
                     <select
                       name="unit"
@@ -411,19 +411,19 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
                       onChange={handleChange}
                       className="select"
                     >
-                      <option value="kg">Kilogram (kg)</option>
-                      <option value="g">Gram (g)</option>
-                      <option value="lb">Pound (lb)</option>
-                      <option value="oz">Ounce (oz)</option>
-                      <option value="l">Liter (l)</option>
-                      <option value="ml">Milliliter (ml)</option>
+                      <option value="kg">Kilogramo (kg)</option>
+                      <option value="g">Gramo (g)</option>
+                      <option value="lb">Libra (lb)</option>
+                      <option value="oz">Onza (oz)</option>
+                      <option value="l">Litro (l)</option>
+                      <option value="ml">Mililitro (ml)</option>
                     </select>
                   </div>
                 </>
               ) : (
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Sale Price *
+                    Precio de Venta *
                   </label>
                   <input
                     type="number"
@@ -441,7 +441,7 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Cost Price *
+                  Precio de Costo *
                 </label>
                 <input
                   type="number"
@@ -467,11 +467,11 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
                   className="rounded border-gray-300 text-blue-600 focus:ring-blue-500 h-5 w-5"
                 />
                 <div className="flex items-center space-x-2">
-                  <span className="text-sm font-medium text-gray-700">Track inventory for this product</span>
+                  <span className="text-sm font-medium text-gray-700">Controlar inventario para este producto</span>
                 </div>
               </label>
               <p className="text-xs text-gray-500 mt-1 ml-8">
-                When disabled, stock levels won't be managed and inventory won't be deducted during sales
+                Al desactivar, no se controlará el nivel de existencias ni se descontará al vender
               </p>
             </div>
 
@@ -479,7 +479,7 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Current Stock *
+                    Stock Actual *
                   </label>
                   <input
                     type="number"
@@ -495,7 +495,7 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Minimum Stock Level *
+                    Nivel Mínimo de Stock *
                   </label>
                   <input
                     type="number"
@@ -513,11 +513,11 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
           </div>
 
           <div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Product Image</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Imagen del Producto</h3>
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Upload Image
+                  Subir Imagen
                 </label>
                 <input
                   type="file"
@@ -531,7 +531,7 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
                 <div className="flex items-center space-x-4">
                   <img
                     src={formData.image}
-                    alt="Product preview"
+                    alt="Vista previa del producto"
                     className="h-20 w-20 object-cover rounded-lg border border-gray-200"
                   />
                   <button
@@ -539,7 +539,7 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
                     onClick={() => setFormData(prev => ({ ...prev, image: '' }))}
                     className="btn btn-secondary btn-sm"
                   >
-                    Remove Image
+                    Eliminar Imagen
                   </button>
                 </div>
               )}
@@ -549,15 +549,15 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
           <div>
             <div className="flex items-center justify-between mb-4">
               <div>
-                <h3 className="text-lg font-semibold text-gray-900">Batch Management</h3>
-                <p className="text-sm text-gray-600">Track manufacturing and expiry dates for better inventory control</p>
+                <h3 className="text-lg font-semibold text-gray-900">Gestión de Lotes</h3>
+                <p className="text-sm text-gray-600">Controla fechas de fabricación y caducidad para un mejor inventario</p>
               </div>
               <button
                 type="button"
                 onClick={addBatch}
                 className="btn btn-primary btn-sm"
               >
-                Add Batch
+                Agregar Lote
               </button>
             </div>
             
@@ -568,7 +568,7 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Batch Number
+                          Número de Lote
                         </label>
                         <input
                           type="text"
@@ -580,7 +580,7 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
                       
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Manufacturing Date
+                          Fecha de Fabricación
                         </label>
                         <input
                           type="date"
@@ -592,7 +592,7 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
                       
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Expiry Date
+                          Fecha de Vencimiento
                         </label>
                         <input
                           type="date"
@@ -604,7 +604,7 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
                       
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Quantity
+                          Cantidad
                         </label>
                         <input
                           type="number"
@@ -617,7 +617,7 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
                       
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Cost Price
+                          Precio de Costo
                         </label>
                         <input
                           type="number"
@@ -635,7 +635,7 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
                           onClick={() => removeBatch(index)}
                           className="btn btn-danger btn-sm w-full"
                         >
-                          Remove
+                          Eliminar
                         </button>
                       </div>
                     </div>
@@ -655,7 +655,7 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
                   onChange={handleChange}
                   className="rounded border-gray-300 text-blue-600 focus:ring-blue-500 h-5 w-5"
                 />
-                <span className="ml-2 text-sm text-gray-700">Taxable</span>
+                <span className="ml-2 text-sm text-gray-700">Aplica Impuesto</span>
               </label>
 
               <label className="flex items-center">
@@ -666,7 +666,7 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
                   onChange={handleChange}
                   className="rounded border-gray-300 text-blue-600 focus:ring-blue-500 h-5 w-5"
                 />
-                <span className="ml-2 text-sm text-gray-700">Active</span>
+                <span className="ml-2 text-sm text-gray-700">Activo</span>
               </label>
             </div>
           </div>
@@ -678,14 +678,14 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
             onClick={onClose}
             className="btn btn-secondary btn-md"
           >
-            Cancel
+            Cancelar
           </button>
           <button
             type="button"
             onClick={handleSubmit}
             className="btn btn-primary btn-md"
           >
-            {product ? 'Update Product' : 'Add Product'}
+            {product ? 'Actualizar Producto' : 'Guardar Producto'}
           </button>
         </div>
       </div>

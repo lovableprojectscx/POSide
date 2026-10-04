@@ -16,11 +16,21 @@ export function ReceiptPrint({ sale, onClose }: ReceiptPrintProps) {
     window.print();
   };
 
+  const formatPaymentMethod = (method: string) => {
+    switch (method) {
+      case 'cash': return 'Efectivo';
+      case 'card': return 'Tarjeta';
+      case 'credit': return 'Crédito';
+      case 'digital': return 'Digital / Transferencia';
+      default: return method;
+    }
+  };
+
   return (
     <div className="modal-overlay">
       <div className="modal max-w-md">
         <div className="modal-header no-print">
-          <h2 className="text-xl font-bold text-gray-900">Print Receipt</h2>
+          <h2 className="text-xl font-bold text-gray-900">Comprobante de Venta</h2>
           <button
             onClick={onClose}
             className="text-gray-400 hover:text-gray-600 p-2 rounded-lg hover:bg-gray-100"
@@ -35,7 +45,7 @@ export function ReceiptPrint({ sale, onClose }: ReceiptPrintProps) {
             {state.settings.storeLogo && (
               <img 
                 src={state.settings.storeLogo} 
-                alt="Store Logo" 
+                alt="Logo Tienda" 
                 className="h-16 w-16 mx-auto mb-4 object-contain"
               />
             )}
@@ -51,19 +61,19 @@ export function ReceiptPrint({ sale, onClose }: ReceiptPrintProps) {
 
           <div className="border-t border-b border-gray-300 py-4 mb-4">
             <div className="flex justify-between text-sm mb-2">
-              <span>Receipt #:</span>
+              <span>Recibo Nº:</span>
               <span className="font-semibold">#{sale.receiptNumber}</span>
             </div>
             <div className="flex justify-between text-sm mb-2">
-              <span>Invoice #:</span>
+              <span>Factura Nº:</span>
               <span className="font-semibold">{sale.invoiceNumber}</span>
             </div>
             <div className="flex justify-between text-sm mb-2">
-              <span>Date:</span>
-              <span>{format(new Date(sale.timestamp), 'MMM dd, yyyy HH:mm')}</span>
+              <span>Fecha:</span>
+              <span>{format(new Date(sale.timestamp), 'dd/MM/yyyy HH:mm')}</span>
             </div>
             <div className="flex justify-between text-sm mb-2">
-              <span>Cashier:</span>
+              <span>Cajero:</span>
               <span>
                 {profile ? (
                   <span>
@@ -76,7 +86,7 @@ export function ReceiptPrint({ sale, onClose }: ReceiptPrintProps) {
             </div>
             {sale.customerName && (
               <div className="flex justify-between text-sm">
-                <span>Customer:</span>
+                <span>Cliente:</span>
                 <span>{sale.customerName}</span>
               </div>
             )}
@@ -96,12 +106,12 @@ export function ReceiptPrint({ sale, onClose }: ReceiptPrintProps) {
                     item.product.isWeightBased 
                       ? (item.product.pricePerUnit || 0).toFixed(2)
                       : item.product.price.toFixed(2)
-                  } {item.product.isWeightBased ? `per ${item.product.unit}` : ''} × {
+                  } {item.product.isWeightBased ? `por ${item.product.unit}` : ''} × {
                     item.weight ? `${item.weight}${item.product.unit}` : item.quantity
                   }
                   {item.discount > 0 && (
                     <span className="text-green-600 ml-2">
-                      (Discount: -{state.settings.currency} {item.discount.toFixed(2)})
+                      (Descuento: -{state.settings.currency} {item.discount.toFixed(2)})
                     </span>
                   )}
                 </div>
@@ -112,11 +122,11 @@ export function ReceiptPrint({ sale, onClose }: ReceiptPrintProps) {
             {sale.freeGifts && sale.freeGifts.length > 0 && (
               <>
                 <div className="border-t border-gray-200 pt-2 mt-2">
-                  <p className="text-sm font-medium text-green-600 mb-2">🎁 Free Gifts:</p>
+                  <p className="text-sm font-medium text-green-600 mb-2">🎁 Regalos de Promoción:</p>
                   {sale.freeGifts.map((gift, index) => (
                     <div key={index} className="flex justify-between text-sm text-green-600">
                       <span>{gift.product.name} × {gift.quantity}</span>
-                      <span>FREE</span>
+                      <span>GRATIS</span>
                     </div>
                   ))}
                 </div>
@@ -131,7 +141,7 @@ export function ReceiptPrint({ sale, onClose }: ReceiptPrintProps) {
             </div>
             {sale.discountAmount > 0 && (
               <div className="flex justify-between text-sm text-green-600">
-                <span>Total Discount:</span>
+                <span>Descuento Total:</span>
                 <span>-{state.settings.currency} {sale.discountAmount.toFixed(2)}</span>
               </div>
             )}
@@ -143,7 +153,7 @@ export function ReceiptPrint({ sale, onClose }: ReceiptPrintProps) {
               </div>
             )}
             <div className="flex justify-between text-sm">
-              <span>Tax ({state.settings.taxRate}%):</span>
+              <span>Impuesto ({state.settings.taxRate}%):</span>
               <span>{state.settings.currency} {sale.taxAmount.toFixed(2)}</span>
             </div>
             <div className="flex justify-between text-lg font-bold border-t border-gray-300 pt-2">
@@ -151,15 +161,15 @@ export function ReceiptPrint({ sale, onClose }: ReceiptPrintProps) {
               <span>{state.settings.currency} {sale.total.toFixed(2)}</span>
             </div>
             <div className="flex justify-between text-sm mt-2">
-              <span>Payment Method:</span>
-              <span className="capitalize">{sale.paymentMethod}</span>
+              <span>Método de Pago:</span>
+              <span className="capitalize">{formatPaymentMethod(sale.paymentMethod)}</span>
             </div>
           </div>
 
           <div className="text-center mt-6 pt-4 border-t border-gray-300">
-            <p className="text-xs text-gray-600">Thank you for your business!</p>
-            <p className="text-xs text-gray-600 mt-1">
-              {format(new Date(), 'yyyy-MM-dd HH:mm:ss')}
+            <p className="text-xs text-gray-600 font-medium">¡Gracias por su compra!</p>
+            <p className="text-xs text-gray-500 mt-1">
+              {format(new Date(), 'dd/MM/yyyy HH:mm:ss')}
             </p>
           </div>
         </div>
@@ -169,40 +179,41 @@ export function ReceiptPrint({ sale, onClose }: ReceiptPrintProps) {
             onClick={onClose}
             className="btn btn-secondary btn-md"
           >
-            Close
+            Cerrar
           </button>
           <button
             onClick={handlePrint}
             className="btn btn-primary btn-md"
           >
-            Print Receipt
+            Imprimir Recibo
           </button>
-        </div>        </div>
+        </div>
+      </div>
 
-        <style>
-        {`
-          @media print {
-            .no-print {
-              display: none !important;
-            }
-            
-            body * {
-              visibility: hidden;
-            }
-            
-            #receipt-content, #receipt-content * {
-              visibility: visible;
-            }
-            
-            #receipt-content {
-              position: absolute;
-              left: 0;
-              top: 0;
-              width: 100%;
-            }
+      <style>
+      {`
+        @media print {
+          .no-print {
+            display: none !important;
           }
-        `}
-        </style>
+          
+          body * {
+            visibility: hidden;
+          }
+          
+          #receipt-content, #receipt-content * {
+            visibility: visible;
+          }
+          
+          #receipt-content {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+          }
+        }
+      `}
+      </style>
     </div>
   );
 }

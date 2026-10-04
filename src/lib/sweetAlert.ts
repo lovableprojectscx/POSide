@@ -6,7 +6,7 @@ export const swalConfig = {
   success: (message: string) => {
     return Swal.fire({
       icon: 'success',
-      title: 'Success!',
+      title: '¡Éxito!',
       text: message,
       toast: true,
       position: 'top-end',
@@ -33,7 +33,7 @@ export const swalConfig = {
   error: (message: string) => {
     return Swal.fire({
       icon: 'error',
-      title: 'Error!',
+      title: '¡Error!',
       text: message,
       toast: true,
       position: 'top-end',
@@ -60,7 +60,7 @@ export const swalConfig = {
   warning: (message: string) => {
     return Swal.fire({
       icon: 'warning',
-      title: 'Warning!',
+      title: '¡Atención!',
       text: message,
       toast: true,
       position: 'top-end',
@@ -87,7 +87,7 @@ export const swalConfig = {
   info: (message: string) => {
     return Swal.fire({
       icon: 'info',
-      title: 'Info',
+      title: 'Información',
       text: message,
       toast: true,
       position: 'top-end',
@@ -111,7 +111,7 @@ export const swalConfig = {
   },
 
   // Confirmation dialog
-  confirm: (title: string, text: string, confirmText: string = 'Yes, delete it!') => {
+  confirm: (title: string, text: string, confirmText: string = 'Confirmar') => {
     return Swal.fire({
       title,
       text,
@@ -120,7 +120,7 @@ export const swalConfig = {
       confirmButtonColor: '#2563eb',
       cancelButtonColor: '#6b7280',
       confirmButtonText: confirmText,
-      cancelButtonText: 'Cancel',
+      cancelButtonText: 'Cancelar',
       background: '#ffffff',
       color: '#374151',
       iconColor: '#f59e0b',
@@ -139,14 +139,14 @@ export const swalConfig = {
   // Delete confirmation
   deleteConfirm: (itemName: string) => {
     return Swal.fire({
-      title: 'Are you sure?',
-      text: `You won't be able to revert this! The ${itemName} will be permanently deleted.`,
+      title: '¿Estás seguro?',
+      text: `¡No podrás revertir esto! El registro (${itemName}) será eliminado permanentemente.`,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#dc2626',
       cancelButtonColor: '#6b7280',
-      confirmButtonText: 'Yes, delete it!',
-      cancelButtonText: 'Cancel',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar',
       background: '#ffffff',
       color: '#374151',
       iconColor: '#f59e0b',
@@ -163,7 +163,7 @@ export const swalConfig = {
   },
 
   // Loading modal
-  loading: (title: string = 'Processing...') => {
+  loading: (title: string = 'Procesando...') => {
     return Swal.fire({
       title,
       allowOutsideClick: false,
@@ -196,8 +196,8 @@ export const swalConfig = {
       showCancelButton: true,
       confirmButtonColor: '#2563eb',
       cancelButtonColor: '#6b7280',
-      confirmButtonText: 'Submit',
-      cancelButtonText: 'Cancel',
+      confirmButtonText: 'Aceptar',
+      cancelButtonText: 'Cancelar',
       background: '#ffffff',
       color: '#374151',
       customClass: {
@@ -211,7 +211,7 @@ export const swalConfig = {
       buttonsStyling: false,
       inputValidator: (value) => {
         if (!value) {
-          return 'Please enter a value!';
+          return '¡Por favor ingresa un valor!';
         }
       }
     });

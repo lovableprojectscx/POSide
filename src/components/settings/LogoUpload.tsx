@@ -61,14 +61,14 @@ export function LogoUpload({ currentLogo, onLogoChange, disabled = false }: Logo
   return (
     <div className="space-y-4">
       <label className="block text-sm font-semibold text-gray-700">
-        Store Logo
+        Logo de la Tienda
       </label>
       
       {currentLogo ? (
         <div className="relative inline-block">
           <img
             src={currentLogo}
-            alt="Store Logo"
+            alt="Logo de la Tienda"
             className="h-24 w-24 object-contain border border-gray-200 rounded-xl bg-white p-2"
           />
           <button
@@ -89,7 +89,7 @@ export function LogoUpload({ currentLogo, onLogoChange, disabled = false }: Logo
             disabled 
               ? 'border-gray-200 bg-gray-100 cursor-not-allowed' 
               : dragOver
-              ? 'border-blue-400 bg-blue-50 cursor-pointer'
+              ? 'border-blue-400 bg-blue-50 cursor-pointer' 
               : 'border-gray-300 hover:border-gray-400 cursor-pointer'
           }`}
           onDrop={handleDrop}
@@ -103,10 +103,10 @@ export function LogoUpload({ currentLogo, onLogoChange, disabled = false }: Logo
             </div>
             <div>
               <p className={`text-sm font-medium ${disabled ? 'text-gray-500' : 'text-gray-900'}`}>
-                {disabled ? 'Upload disabled' : 'Click to upload or drag and drop'}
+                {disabled ? 'Subida deshabilitada' : 'Haz clic para subir o arrastra y suelta'}
               </p>
               <p className="text-xs text-gray-500">
-                PNG, JPG, GIF up to 2MB
+                PNG, JPG, GIF hasta 2MB
               </p>
             </div>
           </div>

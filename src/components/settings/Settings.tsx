@@ -46,12 +46,12 @@ export function Settings() {
     e.preventDefault();
     
     if (!canEditSettings) {
-      swalConfig.error('You do not have permission to change settings. Only administrators and managers can modify store settings.');
+      swalConfig.error('No tienes permisos para modificar la configuración. Solo los administradores y gerentes pueden modificar la tienda.');
       return;
     }
     
     try {
-      swalConfig.loading('Saving settings...');
+      swalConfig.loading('Guardando configuración...');
       const { settingsService } = await import('../../lib/services');
       const updatedSettings = {
         ...formData,
@@ -64,10 +64,10 @@ export function Settings() {
         type: 'SET_SETTINGS',
         payload: updatedSettings
       });
-      swalConfig.success('Settings saved successfully!');
+      swalConfig.success('¡Configuración guardada exitosamente!');
     } catch (error) {
       console.error('Error saving settings:', error);
-      swalConfig.error('Failed to save settings. Please try again.');
+      swalConfig.error('Error al guardar la configuración. Intente nuevamente.');
     }
   };
 
@@ -75,13 +75,13 @@ export function Settings() {
     <div className="p-6 max-w-4xl mx-auto space-y-8">
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
         <div className="px-8 py-6 border-b border-gray-100 bg-gradient-to-r from-blue-50 to-indigo-50">
-          <h1 className="text-3xl font-bold text-gray-900">System Settings</h1>
-          <p className="text-gray-600 mt-2">Configure your POS system preferences and store information</p>
+          <h1 className="text-3xl font-bold text-gray-900">Configuración del Sistema</h1>
+          <p className="text-gray-600 mt-2">Configura las preferencias de tu sistema POS e información de la tienda</p>
           {!canEditSettings && (
             <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-xl flex items-center space-x-3">
               <Lock className="h-5 w-5 text-yellow-600" />
               <p className="text-yellow-800 text-sm">
-                <strong>Read-only access:</strong> Only administrators and managers can modify these settings.
+                <strong>Acceso de solo lectura:</strong> Solo los administradores y gerentes pueden modificar esta configuración.
               </p>
             </div>
           )}
@@ -94,7 +94,7 @@ export function Settings() {
               <div className="bg-blue-100 p-2 rounded-xl">
                 <Store className="h-6 w-6 text-blue-600" />
               </div>
-              <h2 className="text-xl font-bold text-gray-900">Store Information</h2>
+              <h2 className="text-xl font-bold text-gray-900">Información de la Tienda</h2>
             </div>
             
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -102,7 +102,7 @@ export function Settings() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      Store Name *
+                      Nombre de la Tienda *
                     </label>
                     <input
                       type="text"
@@ -117,7 +117,7 @@ export function Settings() {
 
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      Phone Number
+                      Número de Teléfono
                     </label>
                     <input
                       type="tel"
@@ -131,7 +131,7 @@ export function Settings() {
 
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      Email Address
+                      Correo Electrónico
                     </label>
                     <input
                       type="email"
@@ -145,7 +145,7 @@ export function Settings() {
 
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      Currency
+                      Moneda
                     </label>
                     <select
                       name="currency"
@@ -154,18 +154,20 @@ export function Settings() {
                       disabled={!canEditSettings}
                       className={`w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all ${!canEditSettings ? 'bg-gray-100 cursor-not-allowed' : ''}`}
                     >
-                      <option value="USD">USD - US Dollar</option>
-                      <option value="EUR">EUR - Euro</option>
-                      <option value="GBP">GBP - British Pound</option>
-                      <option value="CAD">CAD - Canadian Dollar</option>
-                      <option value="LKR">LKR - Sri Lankan Rupee</option>
+                      <option value="S/">S/ - Sol Peruano (S/)</option>
+                      <option value="PEN">PEN - Sol Peruano (PEN)</option>
+                      <option value="USD">USD - Dólar Estadounidense ($)</option>
+                      <option value="EUR">EUR - Euro (€)</option>
+                      <option value="GBP">GBP - Libra Esterlina (£)</option>
+                      <option value="CAD">CAD - Dólar Canadiense (C$)</option>
+                      <option value="LKR">LKR - Rupia de Sri Lanka (Rs)</option>
                     </select>
                   </div>
                 </div>
 
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Store Address
+                    Dirección de la Tienda
                   </label>
                   <textarea
                     name="storeAddress"
@@ -194,13 +196,13 @@ export function Settings() {
               <div className="bg-green-100 p-2 rounded-xl">
                 <DollarSign className="h-6 w-6 text-green-600" />
               </div>
-              <h2 className="text-xl font-bold text-gray-900">Financial Settings</h2>
+              <h2 className="text-xl font-bold text-gray-900">Configuración Financiera</h2>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Tax Rate (%)
+                  Tasa de Impuesto / IGV (%)
                 </label>
                 <input
                   type="number"
@@ -221,13 +223,13 @@ export function Settings() {
               <div className="bg-purple-100 p-2 rounded-xl">
                 <FileText className="h-6 w-6 text-purple-600" />
               </div>
-              <h2 className="text-xl font-bold text-gray-900">Invoice Settings</h2>
+              <h2 className="text-xl font-bold text-gray-900">Configuración de Facturación</h2>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Invoice Prefix
+                  Prefijo de Factura / Boleta
                 </label>
                 <input
                   type="text"
@@ -236,13 +238,13 @@ export function Settings() {
                   onChange={handleChange}
                   disabled={!canEditSettings}
                   className={`w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all ${!canEditSettings ? 'bg-gray-100 cursor-not-allowed' : ''}`}
-                  placeholder="INV"
+                  placeholder="FAC"
                 />
               </div>
               
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Next Invoice Number
+                  Siguiente Número de Comprobante
                 </label>
                 <input
                   type="number"
@@ -254,9 +256,9 @@ export function Settings() {
                 />
                 <div className="mt-2 p-3 bg-blue-50 border border-blue-200 rounded-lg">
                   <div className="text-xs text-blue-700">
-                    <div className="font-medium mb-1">Invoice Preview:</div>
-                    <div>Next: <span className="font-mono font-bold">{invoiceStats.nextInvoiceNumber}</span></div>
-                    <div>Total Generated: {invoiceStats.totalInvoices}</div>
+                    <div className="font-medium mb-1">Vista Previa de Facturación:</div>
+                    <div>Siguiente: <span className="font-mono font-bold">{invoiceStats.nextInvoiceNumber}</span></div>
+                    <div>Total Generadas: {invoiceStats.totalInvoices}</div>
                   </div>
                 </div>
               </div>
@@ -269,13 +271,13 @@ export function Settings() {
               <div className="bg-purple-100 p-2 rounded-xl">
                 <Globe className="h-6 w-6 text-purple-600" />
               </div>
-              <h2 className="text-xl font-bold text-gray-900">System Preferences</h2>
+              <h2 className="text-xl font-bold text-gray-900">Preferencias del Sistema</h2>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Theme
+                  Tema de Interfaz
                 </label>
                 <select
                   name="theme"
@@ -284,9 +286,9 @@ export function Settings() {
                   disabled={!canEditSettings}
                   className={`w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all ${!canEditSettings ? 'bg-gray-100 cursor-not-allowed' : ''}`}
                 >
-                  <option value="light">Light</option>
-                  <option value="dark">Dark</option>
-                  <option value="auto">Auto</option>
+                  <option value="light">Claro</option>
+                  <option value="dark">Oscuro</option>
+                  <option value="auto">Automático</option>
                 </select>
               </div>
             </div>
@@ -298,7 +300,7 @@ export function Settings() {
               <div className="bg-orange-100 p-2 rounded-xl">
                 <Printer className="h-6 w-6 text-orange-600" />
               </div>
-              <h2 className="text-xl font-bold text-gray-900">Hardware Settings</h2>
+              <h2 className="text-xl font-bold text-gray-900">Configuración de Hardware</h2>
             </div>
             
             <div className="space-y-4">
@@ -312,8 +314,8 @@ export function Settings() {
                   className="rounded border-gray-300 text-blue-600 focus:ring-blue-500 h-5 w-5"
                 />
                 <div className="ml-4">
-                  <span className="text-sm font-semibold text-gray-900">Enable Receipt Printer</span>
-                  <p className="text-xs text-gray-600">Automatically print receipts after each transaction</p>
+                  <span className="text-sm font-semibold text-gray-900">Habilitar Impresora de Recibos</span>
+                  <p className="text-xs text-gray-600">Imprimir recibos automáticamente después de cada venta</p>
                 </div>
               </label>
 
@@ -327,8 +329,8 @@ export function Settings() {
                   className="rounded border-gray-300 text-blue-600 focus:ring-blue-500 h-5 w-5"
                 />
                 <div className="ml-4">
-                  <span className="text-sm font-semibold text-gray-900">Enable Automatic Backup</span>
-                  <p className="text-xs text-gray-600">Automatically backup data to local storage</p>
+                  <span className="text-sm font-semibold text-gray-900">Habilitar Copia de Seguridad Automática</span>
+                  <p className="text-xs text-gray-600">Respaldar datos automáticamente en el almacenamiento local</p>
                 </div>
               </label>
             </div>
@@ -340,7 +342,7 @@ export function Settings() {
               <div className="bg-red-100 p-2 rounded-xl">
                 <Users className="h-6 w-6 text-red-600" />
               </div>
-              <h2 className="text-xl font-bold text-gray-900">Current User</h2>
+              <h2 className="text-xl font-bold text-gray-900">Usuario Actual</h2>
             </div>
             
             <div className="bg-gradient-to-r from-gray-50 to-gray-100 p-6 rounded-xl border border-gray-200">
@@ -351,12 +353,12 @@ export function Settings() {
                   </div>
                   <div>
                     <h3 className="font-bold text-gray-900">{state.currentUser?.name}</h3>
-                    <p className="text-sm text-gray-600">Role: {state.currentUser?.role}</p>
-                    <p className="text-sm text-gray-600">Email: {state.currentUser?.email}</p>
+                    <p className="text-sm text-gray-600">Rol: {state.currentUser?.role === 'admin' ? 'Administrador' : state.currentUser?.role === 'manager' ? 'Gerente' : 'Cajero'}</p>
+                    <p className="text-sm text-gray-600">Correo: {state.currentUser?.email}</p>
                   </div>
                 </div>
                 <span className="inline-flex px-4 py-2 text-sm font-semibold rounded-full bg-green-100 text-green-800">
-                  Active
+                  Activo
                 </span>
               </div>
             </div>
@@ -374,7 +376,7 @@ export function Settings() {
               }`}
             >
               <Save className="h-5 w-5" />
-              <span>{canEditSettings ? 'Save Settings' : 'Access Denied'}</span>
+              <span>{canEditSettings ? 'Guardar Configuración' : 'Acceso Denegado'}</span>
             </button>
           </div>
         </form>

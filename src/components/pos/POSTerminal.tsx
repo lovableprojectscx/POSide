@@ -133,10 +133,10 @@ export function POSTerminal() {
         });
       }
 
-      swalConfig.success('Draft sale saved successfully!');
+      swalConfig.success('¡Venta en borrador guardada exitosamente!');
     } catch (error) {
       console.error('Error saving draft:', error);
-      swalConfig.error('Failed to save draft. Please try again.');
+      swalConfig.error('Error al guardar el borrador. Intente nuevamente.');
     }
   };
 

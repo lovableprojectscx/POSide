@@ -81,9 +81,6 @@ export function Cart({ onCheckout, onSaveDraft }: CartProps) {
   const taxAmount = (subtotal - totalDiscount) * (state.settings.taxRate / 100);
   const total = subtotal - totalDiscount + taxAmount;
 
-  // Debug: Log current tax rate (remove this in production)
-  console.log('Current tax rate:', state.settings.taxRate);
-
   return (
     <div className={`bg-white border-l border-gray-100 flex flex-col h-screen ${
       isTouchMode ? 'w-96' : 'w-80'
@@ -92,12 +89,12 @@ export function Cart({ onCheckout, onSaveDraft }: CartProps) {
       <div className="p-4 lg:p-6 border-b border-gray-100 flex-shrink-0">
         <div className="flex items-center justify-between mb-6">
           <h2 className={`font-bold text-gray-900 ${isTouchMode ? 'text-xl' : 'text-lg'}`}>
-            Shopping Cart
+            Carrito de Compras
           </h2>
           <div className="flex items-center space-x-2">
             <ShoppingCart className="h-5 w-5 text-gray-400" />
             <span className="badge badge-info">
-              {state.cart.length} items
+              {state.cart.length} {state.cart.length === 1 ? 'ítem' : 'ítems'}
             </span>
           </div>
         </div>
@@ -131,7 +128,7 @@ export function Cart({ onCheckout, onSaveDraft }: CartProps) {
               }`}
             >
               <User className="h-4 w-4" />
-              <span>Select Customer</span>
+              <span>Seleccionar Cliente</span>
             </button>
           )}
 
@@ -141,10 +138,10 @@ export function Cart({ onCheckout, onSaveDraft }: CartProps) {
               <div className="p-4">
                 <input
                   type="text"
-                  placeholder="Search customers..."
+                  placeholder="Buscar clientes..."
                   value={customerSearch}
                   onChange={(e) => setCustomerSearch(e.target.value)}
-                  className="input input-sm"
+                  className="input input-sm w-full"
                   autoFocus
                 />
               </div>
@@ -161,7 +158,7 @@ export function Cart({ onCheckout, onSaveDraft }: CartProps) {
                 ))}
                 {filteredCustomers.length === 0 && (
                   <div className="p-4 text-center text-gray-500 text-sm">
-                    No customers found
+                    No se encontraron clientes
                   </div>
                 )}
               </div>
@@ -180,8 +177,8 @@ export function Cart({ onCheckout, onSaveDraft }: CartProps) {
             <div className="bg-gray-100 p-6 rounded-3xl inline-block mb-4">
               <ShoppingCart className="h-12 w-12 text-gray-400" />
             </div>
-            <p className="text-gray-500 font-medium">Cart is empty</p>
-            <p className="text-gray-400 text-sm mt-1">Add products to get started</p>
+            <p className="text-gray-500 font-medium">El carrito está vacío</p>
+            <p className="text-gray-400 text-sm mt-1">Agrega productos para comenzar la venta</p>
           </div>
         ) : (
           state.cart.map((item, index) => (
@@ -209,12 +206,12 @@ export function Cart({ onCheckout, onSaveDraft }: CartProps) {
             </div>
             {totalDiscount > 0 && (
               <div className="flex justify-between text-green-600">
-                <span>Discount:</span>
+                <span>Descuento:</span>
                 <span className="font-medium">-{state.settings.currency} {totalDiscount.toFixed(2)}</span>
               </div>
             )}
             <div className="flex justify-between text-gray-600">
-              <span>Tax ({state.settings.taxRate}%):</span>
+              <span>Impuesto ({state.settings.taxRate}%):</span>
               <span className="font-medium">{state.settings.currency} {taxAmount.toFixed(2)}</span>
             </div>
             <div className="flex justify-between text-xl font-bold text-gray-900 pt-3 border-t border-gray-200">
@@ -231,7 +228,7 @@ export function Cart({ onCheckout, onSaveDraft }: CartProps) {
                 isTouchMode ? 'btn-lg touch-friendly' : 'btn-lg'
               }`}
             >
-              Checkout
+              Cobrar
             </button>
             
             <button
@@ -242,7 +239,7 @@ export function Cart({ onCheckout, onSaveDraft }: CartProps) {
               }`}
             >
               <FileText className="h-4 w-4" />
-              <span>Save Draft</span>
+              <span>Guardar Borrador</span>
             </button>
           </div>
         </div>
@@ -285,16 +282,16 @@ function CartItemCard({ item, index, onUpdateQuantity, onRemove, onApplyDiscount
           <p className={`text-gray-600 ${isTouchMode ? 'text-sm' : 'text-xs'}`}>
             {item.product.isWeightBased ? (
               <>
-                {currency} {item.product.pricePerUnit?.toFixed(2)} per {item.product.unit}
+                {currency} {item.product.pricePerUnit?.toFixed(2)} por {item.product.unit}
                 {item.weight && <span className="ml-2">({item.weight} {item.product.unit})</span>}
               </>
             ) : (
-              <>{currency} {item.product.price.toFixed(2)} each</>
+              <>{currency} {item.product.price.toFixed(2)} c/u</>
             )}
           </p>
           {item.discount > 0 && (
             <p className="text-green-600 text-xs font-medium">
-              Discount: {item.discountType === 'percentage' ? `${item.discount}%` : `${currency} ${item.discount.toFixed(2)}`}
+              Descuento: {item.discountType === 'percentage' ? `${item.discount}%` : `${currency} ${item.discount.toFixed(2)}`}
             </p>
           )}
         </div>
@@ -356,7 +353,7 @@ function CartItemCard({ item, index, onUpdateQuantity, onRemove, onApplyDiscount
           </select>
           <input
             type="number"
-            placeholder="Discount"
+            placeholder="Descuento"
             value={discountValue}
             onChange={(e) => setDiscountValue(e.target.value)}
             className="input input-sm flex-1"
@@ -365,7 +362,7 @@ function CartItemCard({ item, index, onUpdateQuantity, onRemove, onApplyDiscount
             onClick={handleDiscountSubmit}
             className="btn btn-primary btn-sm"
           >
-            Apply
+            Aplicar
           </button>
         </div>
       )}
